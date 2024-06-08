@@ -5,7 +5,7 @@ model:
   # nlayer_inner: 4
   # pool: add
 
-  gnn_type: GINEConv
+  gnn_type: SimplifiedPNAConv
   num_layers: 6
   nlayer_inner: 1
   pool: add

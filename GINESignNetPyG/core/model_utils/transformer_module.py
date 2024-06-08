@@ -36,9 +36,11 @@ class TransformerEncoderLayer(nn.Module):
         # mask: n x k 
         assert x[~mask].max() == 0
         x, enc_slf_attn = self.slf_attn(x, x, x, mask=mask)
-        x[~mask] = 0
+        #x[~mask] = 0
+        x = x * mask.to(x.dtype).unsqueeze(-1)
         x = self.pos_ffn(x, mask)
-        x[~mask] = 0
+        #x[~mask] = 0
+        x = x * mask.to(x.dtype).unsqueeze(-1)
         return x, enc_slf_attn
 
 class ScaledDotProductAttention(nn.Module):
@@ -117,10 +119,12 @@ class PositionwiseFeedForward(nn.Module):
         residual = x
         x = F.relu(self.w_1(x))
         if mask is not None:
-            x[~mask] = 0
+            #x[~mask] = 0
+            x = x * mask.to(x.dtype).unsqueeze(-1)
         x = self.w_2(x)
         if mask is not None:
-            x[~mask] = 0
+            #x[~mask] = 0
+            x = x * mask.to(x.dtype).unsqueeze(-1)
         x = self.dropout(x)
         x += residual
         x = self.norm(x, mask)

@@ -42,9 +42,9 @@ class GNN3d(nn.Module):
             if mask is not None:
                 x[~mask] = 0
             x = norm(x, mask)
-            x = F.relu(x)
-            x += previous_x
-            previous_x = x
+            x = F.relu(x , inplace=False)
+            x = x.clone() + previous_x
+            previous_x = x.clone()
         return x.transpose(0, 1)
 
 class SetTransformer(nn.Module):
@@ -67,7 +67,7 @@ class SetTransformer(nn.Module):
         # mask: n x k
         # x = self.encoder(x) + self.pos_encoder(pos, mask)
         # x[~mask] = 0
-        x = x + pos
+        x = x.clone() + pos
         assert x[~mask].max() == 0
         for layer in self.transformer_layers:
             assert x[~mask].max() == 0
@@ -119,11 +119,14 @@ class SignNet(nn.Module):
 
         return x # n x n_hid 
 
-class SignNetGNN(nn.Module):
+### ORIGINAL SIGNNET #######
+'''class SignNetGNN(nn.Module):
     def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn):
+        # No node/edge features, n_hid=128, n_out=1, nl_signnet=4, nl_gnn=6
         super().__init__()
         self.sign_net = SignNet(n_hid, nl_signnet, nl_rho=1)
-        self.gnn = GNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, gnn_type='GINEConv') #GINEConv
+        # output of signNet has size Nxn_hid
+        self.gnn = GNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, gnn_type='SimplifiedPNAConv') #GINEConv
 
     def reset_parameters(self):
         self.sign_net.reset_parameters()
@@ -131,4 +134,18 @@ class SignNetGNN(nn.Module):
 
     def forward(self, data):
         pos = self.sign_net(data)
-        return self.gnn(data, pos)
+        return self.gnn(data, pos)'''
+
+
+class SignNetGNN(nn.Module):
+    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn):
+        super().__init__()
+        #n_hid = 1
+        self.gnn = GNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, gnn_type='SimplifiedPNAConv') #GINEConv
+
+    def reset_parameters(self):
+        self.gnn.reset_parameters()
+
+    def forward(self, data, x_rand):
+        return self.gnn(data, x_rand)
+

@@ -1,3 +1,6 @@
+import os
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 import torch
 from core.config import cfg, update_cfg
 from core.train import run 
@@ -56,9 +59,13 @@ def train(train_loader, model, optimizer, device):
             data, y, num_graphs = [d.to(device) for d in data], data[0].y, data[0].num_graphs 
         else:
             data, y, num_graphs = data.to(device), data.y, data.num_graphs
+            # size Nx1xM?
+            rand_x = torch.randn((data.x.shape[0], 1, 100)).to(device)
         optimizer.zero_grad()
-        loss = (model(data).squeeze() - y).abs().mean()
-        loss.backward()
+        loss = (model(data, rand_x).squeeze() - y).abs().mean()
+        #loss = (model(data).squeeze() - y).abs().mean()
+        with torch.autograd.set_detect_anomaly(True):
+            loss.backward()
         total_loss += loss.item() * num_graphs
         optimizer.step()
         N += num_graphs
@@ -73,7 +80,8 @@ def test(loader, model, evaluator, device):
             data, y, num_graphs = [d.to(device) for d in data], data[0].y, data[0].num_graphs 
         else:
             data, y, num_graphs = data.to(device), data.y, data.num_graphs
-        total_error += (model(data).squeeze() - y).abs().sum().item()
+            rand_x = torch.randn((data.x.shape[0], 1, 100)).to(device)
+        total_error += (model(data, rand_x).squeeze() - y).abs().sum().item()
         N += num_graphs
     test_perf = - total_error / N
     return test_perf
@@ -81,6 +89,7 @@ def test(loader, model, evaluator, device):
 
 if __name__ == '__main__':
     # get config 
+    cfg.set_new_allowed(True) 
     cfg.merge_from_file('train/config/zinc.yaml')
     cfg = update_cfg(cfg)
     run(cfg, create_dataset, create_model, train, test)
