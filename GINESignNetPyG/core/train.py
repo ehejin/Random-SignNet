@@ -35,17 +35,17 @@ def run(cfg, create_dataset, create_model, train, test, evaluator=None):
         for epoch in range(1, cfg.train.epochs+1):
             start = time.time()
             model.train()
-            train_loss = train(train_loader, model, optimizer, device=cfg.device)
+            train_loss = train(train_loader, model, optimizer, device=cfg.device, num_samples=cfg.train.num_samples)
             scheduler.step()
             memory_allocated = torch.cuda.max_memory_allocated(cfg.device) // (1024 ** 2)
             memory_reserved = torch.cuda.max_memory_reserved(cfg.device) // (1024 ** 2)
             # print(f"---{test(train_loader, model, evaluator=evaluator, device=cfg.device) }")
 
             model.eval()
-            val_perf = test(val_loader, model, evaluator=evaluator, device=cfg.device)
+            val_perf = test(val_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.test.num_samples)
             if val_perf > best_val_perf:
                 best_val_perf = val_perf
-                test_perf = test(test_loader, model, evaluator=evaluator, device=cfg.device) 
+                test_perf = test(test_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.test.num_samples) 
             time_per_epoch = time.time() - start 
 
             # logger here

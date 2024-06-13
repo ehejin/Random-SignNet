@@ -5,7 +5,7 @@ from torch_scatter import scatter
 from core.transform import to_dense_list_EVD
 
 import core.model_utils.masked_layers as masked_layers 
-from core.model import GNN
+from core.model import GNN, RGNN
 from core.model_utils.transformer_module import TransformerEncoderLayer, PositionalEncoding 
 from core.model_utils.elements import DiscreteEncoder
 
@@ -120,7 +120,7 @@ class SignNet(nn.Module):
         return x # n x n_hid 
 
 ### ORIGINAL SIGNNET #######
-'''class SignNetGNN(nn.Module):
+class SignNetGNN(nn.Module):
     def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn):
         # No node/edge features, n_hid=128, n_out=1, nl_signnet=4, nl_gnn=6
         super().__init__()
@@ -134,14 +134,13 @@ class SignNet(nn.Module):
 
     def forward(self, data):
         pos = self.sign_net(data)
-        return self.gnn(data, pos)'''
+        return self.gnn(data, pos)
 
 
-class SignNetGNN(nn.Module):
+class RandomGNN(nn.Module):
     def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn):
         super().__init__()
-        #n_hid = 1
-        self.gnn = GNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, gnn_type='SimplifiedPNAConv') #GINEConv
+        self.gnn = RGNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, gnn_type='RandPNAConv') #GINEConv
 
     def reset_parameters(self):
         self.gnn.reset_parameters()

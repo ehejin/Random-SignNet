@@ -1,11 +1,11 @@
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
+os.environ["CUDA_VISIBLE_DEVICES"]="6"
 import torch
 from core.config import cfg, update_cfg
 from core.train import run 
 from core.model import GNN
-from core.sign_net import SignNetGNN
+from core.sign_net import SignNetGNN, RandomGNN
 from core.transform import EVDTransform
 
 from torch_geometric.datasets import ZINC
@@ -38,6 +38,12 @@ def create_model(cfg):
                            n_out=1, 
                            nl_signnet=cfg.model.num_layers_sign, 
                            nl_gnn=cfg.model.num_layers)
+    elif cfg.model.gnn_type == 'Random':
+        model = RandomGNN(None, None,
+                           n_hid=cfg.model.hidden_size, 
+                           n_out=1, 
+                           nl_signnet=cfg.model.num_layers_sign, 
+                           nl_gnn=cfg.model.num_layers)
     else:
         model = GNN(None, None, 
                     nhid=cfg.model.hidden_size, 
@@ -51,7 +57,7 @@ def create_model(cfg):
     return model
 
 
-def train(train_loader, model, optimizer, device):
+def train(train_loader, model, optimizer, device, num_samples):
     total_loss = 0
     N = 0 
     for data in train_loader:
@@ -59,11 +65,12 @@ def train(train_loader, model, optimizer, device):
             data, y, num_graphs = [d.to(device) for d in data], data[0].y, data[0].num_graphs 
         else:
             data, y, num_graphs = data.to(device), data.y, data.num_graphs
-            # size Nx1xM?
-            rand_x = torch.randn((data.x.shape[0], 1, 100)).to(device)
         optimizer.zero_grad()
-        loss = (model(data, rand_x).squeeze() - y).abs().mean()
-        #loss = (model(data).squeeze() - y).abs().mean()
+        if num_samples is not None:
+            rand_x = torch.randn((data.x.shape[0], 1, num_samples)).to(device)
+            loss = (model(data, rand_x).squeeze() - y).abs().mean()
+        else:
+            loss = (model(data).squeeze() - y).abs().mean()
         with torch.autograd.set_detect_anomaly(True):
             loss.backward()
         total_loss += loss.item() * num_graphs
@@ -72,7 +79,7 @@ def train(train_loader, model, optimizer, device):
     return total_loss / N
 
 @torch.no_grad()
-def test(loader, model, evaluator, device):
+def test(loader, model, evaluator, device, num_samples):
     total_error = 0
     N = 0
     for data in loader:
@@ -80,8 +87,11 @@ def test(loader, model, evaluator, device):
             data, y, num_graphs = [d.to(device) for d in data], data[0].y, data[0].num_graphs 
         else:
             data, y, num_graphs = data.to(device), data.y, data.num_graphs
-            rand_x = torch.randn((data.x.shape[0], 1, 100)).to(device)
-        total_error += (model(data, rand_x).squeeze() - y).abs().sum().item()
+        if num_samples is not None:
+            rand_x = torch.randn((data.x.shape[0], 1, num_samples)).to(device)
+            total_error += (model(data, rand_x).squeeze() - y).abs().sum().item()
+        else:
+            total_error += (model(data).squeeze() - y).abs().sum().item()
         N += num_graphs
     test_perf = - total_error / N
     return test_perf
@@ -90,6 +100,6 @@ def test(loader, model, evaluator, device):
 if __name__ == '__main__':
     # get config 
     cfg.set_new_allowed(True) 
-    cfg.merge_from_file('train/config/zinc.yaml')
+    cfg.merge_from_file('train/config/random-zinc.yaml')
     cfg = update_cfg(cfg)
     run(cfg, create_dataset, create_model, train, test)

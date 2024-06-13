@@ -6,7 +6,7 @@ import core.model_utils.pyg_gnn_wrapper as gnn_wrapper
 from core.model_utils.elements import MLP, DiscreteEncoder, Identity, BN
 from torch_geometric.nn.inits import reset
 
-'''class GNN(nn.Module):
+class GNN(nn.Module):
     # this version use nin as hidden instead of nout, resulting a larger model
     def __init__(self, nfeat_node, nfeat_edge, nhid, nout, nlayer, gnn_type, dropout=0, pooling='add', bn=BN, dos_bins=0, res=True):
         super().__init__()
@@ -84,7 +84,7 @@ from torch_geometric.nn.inits import reset
             x = x + self.dos_encoder(data.dos)
         import pdb; pdb.set_trace()
         x = self.output_encoder(x)
-        return x'''
+        return x
 
 from torch.nn import Linear
 class Linear2(Linear):
@@ -103,7 +103,8 @@ class Linear2(Linear):
 
         return out
 
-class GNN(nn.Module):
+# Class is a copy of GNN class above, with some operations changed for random node embeddings
+class RGNN(nn.Module):
     # this version use nin as hidden instead of nout, resulting a larger model
     def __init__(self, nfeat_node, nfeat_edge, nhid, nout, nlayer, gnn_type, dropout=0, pooling='add', bn=BN, dos_bins=0, res=True):
         super().__init__()

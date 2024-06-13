@@ -50,7 +50,7 @@ class GCNConv(nn.Module):
 
 from torch_scatter import scatter
 from torch_geometric.utils import degree
-'''class SimplifiedPNAConv(gnn.MessagePassing):
+class SimplifiedPNAConv(gnn.MessagePassing):
     def __init__(self, nin, nout, bias=True, aggregators=['mean'], **kwargs): # ['mean', 'min', 'max', 'std'],
         kwargs.setdefault('aggr', None)
         super().__init__(node_dim=0, **kwargs)
@@ -103,9 +103,9 @@ from torch_geometric.utils import degree
         outs.append(self.deg_embedder(degree(index, dim_size, dtype=index.dtype)))
         out = torch.cat(outs, dim=-1)
 
-        return out'''
+        return out
 
-class SimplifiedPNAConv(gnn.MessagePassing):
+class RandPNAConv(gnn.MessagePassing):
     def __init__(self, nin, nout, bias=True, aggregators=['mean', 'min', 'max', 'std'], **kwargs): # used to be mean only? # ['mean', 'min', 'max', 'std'],
         kwargs.setdefault('aggr', None)
         super().__init__(node_dim=0, **kwargs)
@@ -130,7 +130,7 @@ class SimplifiedPNAConv(gnn.MessagePassing):
 
     def message(self, x_i, x_j, edge_attr):
         if edge_attr is not None:
-            #PROB: x_i is 3d, x_j is 2d
+            #problem before: x_i is 3d, x_j is 2d
             h = torch.cat([x_i, x_j, edge_attr.unsqueeze(-1).expand(-1, -1, x_i.shape[-1])], dim=1)
             A, H, B = h.shape
         else:

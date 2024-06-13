@@ -1,0 +1,16 @@
+dataset: ZINC
+model:
+  # gnn_type: PPGN
+  # num_layers: 1
+  # nlayer_inner: 4
+  # pool: add
+
+  gnn_type: SimplifiedPNAConv
+  num_layers: 6
+  nlayer_inner: 1
+  pool: add
+train:
+  epochs: 310
+  num_samples: 100
+test:
+  num_samples: 100
