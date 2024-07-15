@@ -37,7 +37,7 @@ class DiscreteEncoder(nn.Module):
         return out
 
 class MLP(nn.Module):
-    def __init__(self, nin, nout, nlayer=2, with_final_activation=True, with_norm=BN, bias=True, nhid=None):
+    def __init__(self, nin, nout, nlayer=2, with_final_activation=True, with_norm='batchnorm', bias=True, nhid=None):
         super().__init__()
         n_hid = nin if nhid is None else nhid
         self.layers = nn.ModuleList([nn.Linear(nin if i==0 else n_hid, 
@@ -45,8 +45,9 @@ class MLP(nn.Module):
                                      bias=True if (i==nlayer-1 and not with_final_activation and bias) # TODO: revise later
                                         or (not with_norm) else False) # set bias=False for BN
                                      for i in range(nlayer)])
-        self.norms = nn.ModuleList([nn.BatchNorm1d(n_hid if i<nlayer-1 else nout,track_running_stats=RUNNING_STAT) if with_norm else Identity()
-                                     for i in range(nlayer)])
+        self.norms = nn.ModuleList([nn.BatchNorm1d(n_hid if i<nlayer-1 else nout) if with_norm=='batchnorm' else 
+                                    nn.LayerNorm(n_hid if i<nlayer-1 else nout) if with_norm=='layernorm' else
+                                    Identity() for i in range(nlayer)])
         self.nlayer = nlayer
         self.with_final_activation = with_final_activation
         self.residual = (nin==nout) ## TODO: test whether need this

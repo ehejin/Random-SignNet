@@ -5,12 +5,13 @@ model:
   # nlayer_inner: 4
   # pool: add
 
-  gnn_type: SimplifiedPNAConv
-  num_layers: 6
+  gnn_type: Random
+  num_layers: 8
   nlayer_inner: 1
   pool: add
 train:
-  epochs: 310
+  epochs: 450
   num_samples: 100
+  dropout: 0.4
 test:
   num_samples: 100
