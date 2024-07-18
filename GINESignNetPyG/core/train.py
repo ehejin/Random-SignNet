@@ -3,8 +3,9 @@ import time
 from core.log import config_logger
 from torch_geometric.loader import DataLoader
 from torch.optim.lr_scheduler import StepLR
+import wandb
 
-def run(cfg, create_dataset, create_model, train, test, evaluator=None):
+def run(config_path, cfg, create_dataset, create_model, train, test, evaluator=None):
     # set num threads
     # torch.set_num_threads(cfg.num_workers)
 
@@ -21,6 +22,12 @@ def run(cfg, create_dataset, create_model, train, test, evaluator=None):
     
     test_perfs = []
     vali_perfs = []
+    cfg_name = config_path[:-5]
+    run = wandb.init(
+                project="my-awesome-project",
+                config=cfg,
+                name=cfg_name
+            )
     for run in range(1, cfg.train.runs+1):
         # 3. create model and opt
         model = create_model(cfg).to(cfg.device)
@@ -52,13 +59,14 @@ def run(cfg, create_dataset, create_model, train, test, evaluator=None):
             print(f'Epoch: {epoch:03d}, Train Loss: {train_loss:.4f}, '
                   f'Val: {val_perf:.4f}, Test: {test_perf:.4f}, Seconds: {time_per_epoch:.4f}, '
                   f'Memory Peak: {memory_allocated} MB allocated, {memory_reserved} MB reserved.')
-
+            
+            wandb.log({"Train Loss": train_loss, "Val Loss": val_perf, "Test Loss": test_perf})
             # logging training
-            writer.add_scalar(f'Run{run}/train-loss', train_loss, epoch)
-            writer.add_scalar(f'Run{run}/val-perf', val_perf, epoch)
-            writer.add_scalar(f'Run{run}/test-best-perf', test_perf, epoch)
-            writer.add_scalar(f'Run{run}/seconds', time_per_epoch, epoch)   
-            writer.add_scalar(f'Run{run}/memory', memory_allocated, epoch)   
+            #writer.add_scalar(f'Run{run}/train-loss', train_loss, epoch)
+            #writer.add_scalar(f'Run{run}/val-perf', val_perf, epoch)
+            #writer.add_scalar(f'Run{run}/test-best-perf', test_perf, epoch)
+            #writer.add_scalar(f'Run{run}/seconds', time_per_epoch, epoch)   
+            #writer.add_scalar(f'Run{run}/memory', memory_allocated, epoch)   
 
             torch.cuda.empty_cache() # empty test part memory cost
 
@@ -78,11 +86,11 @@ def run(cfg, create_dataset, create_model, train, test, evaluator=None):
                 f'Seconds/epoch: {time_average_epoch/cfg.train.epochs}, Memory Peak: {memory_allocated} MB allocated, {memory_reserved} MB reserved.')
 
 
-def run_k_fold(cfg, create_dataset, create_model, train, test, evaluator=None, k=10):
+def run_k_fold(run_name, cfg, create_dataset, create_model, train, test, evaluator=None, k=10):
     # if cfg.seed is not None:
 
     writer, logger, config_string = config_logger(cfg)
-    dataset, transform, transform_eval = create_dataset(cfg)
+    dataset, _, _ = create_dataset(cfg)
 
     if hasattr(dataset, 'train_indices'):
         k_fold_indices = dataset.train_indices, dataset.test_indices
@@ -91,15 +99,18 @@ def run_k_fold(cfg, create_dataset, create_model, train, test, evaluator=None, k
 
     test_perfs = []
     test_curves = []
+    run = wandb.init(
+                project="graph-hyperparams",
+                config=cfg,
+                name=run_name
+            )
     for fold, (train_idx, test_idx) in enumerate(zip(*k_fold_indices)):
         set_random_seed(0) # important 
         
-        train_dataset = dataset[train_idx]
-        test_dataset = dataset[test_idx]
-        train_dataset.transform = transform
-        test_dataset.transform = transform_eval
-        test_dataset = [x for x in test_dataset]
-        train_dataset = [x for x in train_dataset]
+        train_dataset = dataset[train_idx].copy()
+        test_dataset = dataset[test_idx].copy()
+        #test_dataset = [x for x in test_dataset]
+        #train_dataset = [x for x in train_dataset]
 
         train_loader = DataLoader(train_dataset, cfg.train.batch_size, shuffle=True, num_workers=cfg.num_workers)
         test_loader = DataLoader(test_dataset,  cfg.train.batch_size, shuffle=False, num_workers=cfg.num_workers)
@@ -116,14 +127,14 @@ def run_k_fold(cfg, create_dataset, create_model, train, test, evaluator=None, k
         for epoch in range(1, cfg.train.epochs+1):
             start = time.time()
             model.train()
-            train_loss = train(train_loader, model, optimizer, device=cfg.device)
+            train_loss = train(train_loader, model, optimizer, device=cfg.device, num_samples=cfg.train.num_samples)
             scheduler.step()
             memory_allocated = torch.cuda.max_memory_allocated(cfg.device) // (1024 ** 2)
             memory_reserved = torch.cuda.max_memory_reserved(cfg.device) // (1024 ** 2)
 
             model.eval()
-            test_perf = test(test_loader, model, evaluator=evaluator, device=cfg.device) 
-            test_curve.append(test_perf.item())
+            test_perf = test(test_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.test.num_samples) 
+            test_curve.append(test_perf)
             best_test_perf = test_perf if test_perf > best_test_perf else best_test_perf
   
             time_per_epoch = time.time() - start 
@@ -134,11 +145,12 @@ def run_k_fold(cfg, create_dataset, create_model, train, test, evaluator=None, k
                   f'Memory Peak: {memory_allocated} MB allocated, {memory_reserved} MB reserved.')
 
             # logging training
-            writer.add_scalar(f'Fold{fold}/train-loss', train_loss, epoch)
-            writer.add_scalar(f'Fold{fold}/test-perf', test_perf, epoch)
-            writer.add_scalar(f'Fold{fold}/test-best-perf', best_test_perf, epoch)
-            writer.add_scalar(f'Fold{fold}/seconds', time_per_epoch, epoch)   
-            writer.add_scalar(f'Fold{fold}/memory', memory_allocated, epoch)   
+            #writer.add_scalar(f'Fold{fold}/train-loss', train_loss, epoch)
+            #writer.add_scalar(f'Fold{fold}/test-perf', test_perf, epoch)
+            #writer.add_scalar(f'Fold{fold}/test-best-perf', best_test_perf, epoch)
+            #writer.add_scalar(f'Fold{fold}/seconds', time_per_epoch, epoch)   
+            #writer.add_scalar(f'Fold{fold}/memory', memory_allocated, epoch)   
+            wandb.log({"Train Loss": train_loss, "Test Loss": test_perf})
 
             torch.cuda.empty_cache() # empty test part memory cost
 
@@ -177,6 +189,7 @@ def run_k_fold(cfg, create_dataset, create_model, train, test, evaluator=None, k
         '-------------------------------\n')
     logger.info(msg)
     print(msg)   
+    return test_perf.mean()
 
 import random, numpy as np
 import warnings
@@ -206,9 +219,9 @@ def set_random_seed(seed=0, cuda_deterministic=True):
         warnings.warn('You have chosen to seed training WITHOUT CUDNN deterministic. '
                        'This is much faster but less reproducible')
 
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, KFold
 def k_fold(dataset, folds=10):
-    skf = StratifiedKFold(folds, shuffle=True, random_state=12345)
+    skf = KFold(folds, shuffle=True, random_state=12345) # change to Stratified KFold?
 
     train_indices, test_indices = [], []
     ys = dataset.data.y

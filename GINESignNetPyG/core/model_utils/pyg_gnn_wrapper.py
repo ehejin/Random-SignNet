@@ -51,7 +51,7 @@ class GCNConv(nn.Module):
 from torch_scatter import scatter
 from torch_geometric.utils import degree
 class SimplifiedPNAConv(gnn.MessagePassing):
-    def __init__(self, nin, nout, bias=True, aggregators=['mean'], **kwargs): # ['mean', 'min', 'max', 'std'],
+    def __init__(self, nin, nout, bias=True, aggregators=['mean', 'min', 'max', 'std'], **kwargs): # ['mean', 'min', 'max', 'std'],
         kwargs.setdefault('aggr', None)
         super().__init__(node_dim=0, **kwargs)
         self.aggregators = aggregators
@@ -66,6 +66,7 @@ class SimplifiedPNAConv(gnn.MessagePassing):
         self.deg_embedder.reset_parameters()
 
     def forward(self, x, edge_index, edge_attr):
+        #import pdb; pdb.set_trace()
         out = self.propagate(edge_index, x=x, edge_attr=edge_attr)
         out = torch.cat([x, out], dim=-1)
         out = self.post_nn(out)
@@ -106,12 +107,12 @@ class SimplifiedPNAConv(gnn.MessagePassing):
         return out
 
 class RandPNAConv(gnn.MessagePassing):
-    def __init__(self, nin, nout, bias=True, aggregators=['mean', 'min', 'max', 'std'], **kwargs): # used to be mean only? # ['mean', 'min', 'max', 'std'],
+    def __init__(self, nin, nout, bias=True, aggregators=['mean', 'min', 'max', 'std'], bn='layernorm', pna_layers=2, **kwargs): # used to be mean only? # ['mean', 'min', 'max', 'std'],
         kwargs.setdefault('aggr', None)
         super().__init__(node_dim=0, **kwargs)
         self.aggregators = aggregators
-        self.pre_nn = MLP(3*nin, nin, 2, False)
-        self.post_nn = MLP((len(aggregators) + 1 +1) * nin, nout, 2, False, bias=bias)
+        self.pre_nn = MLP(3*nin, nin, pna_layers, False, with_norm=bn)
+        self.post_nn = MLP((len(aggregators) + 1 +1) * nin, nout, pna_layers, False, with_norm=bn, bias=bias)
         # self.post_nn = MLP((len(aggregators) + 1 ) * nin, nout, 2, False)
         self.deg_embedder = nn.Embedding(200, nin) 
 

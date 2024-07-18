@@ -4,6 +4,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]='3'
 import torch
 from core.config import cfg, update_cfg
 from core.train import run, run_k_fold
+from core.train import run, run_k_fold
 from core.model import GNN
 from core.sign_net import SignNetGNN, RandomGNN
 from core.transform import EVDTransform
@@ -42,6 +43,16 @@ def create_dataset(cfg):
     test_dataset.edge_attr = torch.cat((test_dataset.edge_attr.unsqueeze(1), laplacian), dim=1)
     return train_dataset, val_dataset, test_dataset
 
+def create_dataset_kfold(cfg): 
+    torch.set_num_threads(cfg.num_workers)
+    transform = transform_eval = EVDTransform('sym')
+    # transform = transform_eval = None
+    root = 'data/ZINC'
+    train_dataset = ZINC(root, subset=True, split='train', transform=transform)
+    train_num_distincts = [check_distinct(data) for data in train_dataset]
+    print(f"Percentage of graphs with distinct eigenvalues (train): {100*sum(train_num_distincts)/len(train_num_distincts)}%")
+    return train_dataset
+
 def create_model(cfg):
     if cfg.model.gnn_type == 'SignNet':
         model = SignNetGNN(None, None,
@@ -50,6 +61,7 @@ def create_model(cfg):
                            nl_signnet=cfg.model.num_layers_sign, 
                            nl_gnn=cfg.model.num_layers)
     elif cfg.model.gnn_type == 'Random':
+        print("RANDOM")
         model = RandomGNN(None, None,
                            n_hid=cfg.model.hidden_size, 
                            n_out=1, 
@@ -90,6 +102,9 @@ def train(train_loader, model, optimizer, device, num_samples):
         total_loss += loss.item() * num_graphs
         optimizer.step()
         N += num_graphs
+    #        break
+    #print(prof.key_averages().table(sort_by="self_cuda_memory_usage", row_limit=10))
+    #print(prof.key_averages().table(sort_by="self_cpu_memory_usage", row_limit=10))
     return total_loss / N
 
 @torch.no_grad()

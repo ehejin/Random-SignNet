@@ -11,3 +11,6 @@ model:
   pool: add
 train:
   epochs: 310
+  num_samples: 
+test:
+  num_samples: 
