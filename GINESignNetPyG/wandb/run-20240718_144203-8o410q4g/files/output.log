@@ -1,0 +1,37 @@
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+batchnorm BN
+hidden 6
+skip connections!
+BN? True
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 286, in <module>
+    run(config_path, cfg, create_dataset, create_model, train, test)
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py", line 55, in run
+    val_perf = test(val_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.test.num_samples)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 125, in test
+    total_error += (model(data, rand_x).squeeze() - y).abs().sum().item()
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: SingleGNN.forward() takes 2 positional arguments but 3 were given

@@ -1,0 +1,39 @@
+RANDOM
+['mean', 'min', 'max', 'std']
+BN? True
+BN? True
+['mean', 'min', 'max', 'std']
+BN? True
+BN? True
+['mean', 'min', 'max', 'std']
+BN? True
+BN? True
+['mean', 'min', 'max', 'std']
+BN? True
+BN? True
+['mean', 'min', 'max', 'std']
+BN? True
+BN? True
+['mean', 'min', 'max', 'std']
+BN? True
+BN? True
+batchnorm BN
+hidden 6
+skip connections!
+BN? True
+Epoch: 001, Train Loss: 1.1455, Val: -0.0499, Test: -0.0501, Seconds: 228.7739, Memory Peak: 36933 MB allocated, 45178 MB reserved.
+Epoch: 002, Train Loss: 1.0832, Val: -0.0231, Test: -0.0233, Seconds: 246.6569, Memory Peak: 37078 MB allocated, 45250 MB reserved.
+Epoch: 003, Train Loss: 1.0505, Val: -0.0205, Test: -0.0205, Seconds: 251.6043, Memory Peak: 37171 MB allocated, 45270 MB reserved.
+Epoch: 004, Train Loss: 1.0310, Val: -0.0180, Test: -0.0181, Seconds: 251.4012, Memory Peak: 37302 MB allocated, 45282 MB reserved.
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 291, in <module>
+    #run(config_path, cfg, create_dataset, create_model, train, test)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py", line 73, in run
+    torch.cuda.empty_cache() # empty test part memory cost
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/cuda/memory.py", line 162, in empty_cache
+    torch._C._cuda_emptyCache()
+KeyboardInterrupt

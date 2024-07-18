@@ -1,0 +1,207 @@
+2024-07-18 14:44:40,476 INFO    StreamThr :2164077 [internal.py:wandb_internal():85] W&B internal server running at pid: 2164077, started at: 2024-07-18 14:44:40.475824
+2024-07-18 14:44:40,478 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: status
+2024-07-18 14:44:40,480 INFO    WriterThread:2164077 [datastore.py:open_for_write():87] open: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/run-xvy3ocvx.wandb
+2024-07-18 14:44:40,481 DEBUG   SenderThread:2164077 [sender.py:send():379] send: header
+2024-07-18 14:44:40,483 DEBUG   SenderThread:2164077 [sender.py:send():379] send: run
+2024-07-18 14:44:40,724 INFO    SenderThread:2164077 [dir_watcher.py:__init__():211] watching files in: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files
+2024-07-18 14:44:40,724 INFO    SenderThread:2164077 [sender.py:_start_run_threads():1188] run started: xvy3ocvx with start time 1721339080.475403
+2024-07-18 14:44:40,734 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: check_version
+2024-07-18 14:44:40,735 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: check_version
+2024-07-18 14:44:40,800 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: run_start
+2024-07-18 14:44:40,832 DEBUG   HandlerThread:2164077 [system_info.py:__init__():26] System info init
+2024-07-18 14:44:40,832 DEBUG   HandlerThread:2164077 [system_info.py:__init__():41] System info init done
+2024-07-18 14:44:40,832 INFO    HandlerThread:2164077 [system_monitor.py:start():194] Starting system monitor
+2024-07-18 14:44:40,833 INFO    SystemMonitor:2164077 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-07-18 14:44:40,833 INFO    HandlerThread:2164077 [system_monitor.py:probe():214] Collecting system info
+2024-07-18 14:44:40,833 INFO    SystemMonitor:2164077 [interfaces.py:start():188] Started cpu monitoring
+2024-07-18 14:44:40,834 INFO    SystemMonitor:2164077 [interfaces.py:start():188] Started disk monitoring
+2024-07-18 14:44:40,835 INFO    SystemMonitor:2164077 [interfaces.py:start():188] Started gpu monitoring
+2024-07-18 14:44:40,835 INFO    SystemMonitor:2164077 [interfaces.py:start():188] Started memory monitoring
+2024-07-18 14:44:40,836 INFO    SystemMonitor:2164077 [interfaces.py:start():188] Started network monitoring
+2024-07-18 14:44:40,924 DEBUG   HandlerThread:2164077 [system_info.py:probe():152] Probing system
+2024-07-18 14:44:40,928 DEBUG   HandlerThread:2164077 [system_info.py:_probe_git():137] Probing git
+2024-07-18 14:44:40,936 DEBUG   HandlerThread:2164077 [system_info.py:_probe_git():145] Probing git done
+2024-07-18 14:44:40,936 DEBUG   HandlerThread:2164077 [system_info.py:probe():200] Probing system done
+2024-07-18 14:44:40,936 DEBUG   HandlerThread:2164077 [system_monitor.py:probe():223] {'os': 'Linux-5.4.0-171-generic-x86_64-with-glibc2.31', 'python': '3.11.9', 'heartbeatAt': '2024-07-18T21:44:40.924993', 'startedAt': '2024-07-18T21:44:40.469854', 'docker': None, 'cuda': None, 'args': ('--config', 'configs/random-zinc.yaml'), 'state': 'running', 'program': '-m train.zinc', 'codePathLocal': None, 'git': {'remote': 'https://github.com/ehejin/Random-SignNet.git', 'commit': 'dd1c775bace5515177c9f61cc2c96797c2dc8547'}, 'email': None, 'root': '/lfs/hyperturing1/0/echoi1/Random-SignNet', 'host': 'hyperturing1.stanford.edu', 'username': 'echoi1', 'executable': '/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/bin/python', 'cpu_count': 128, 'cpu_count_logical': 255, 'cpu_freq': {'current': 1706.2390196078427, 'min': 1500.0, 'max': 2250.0}, 'cpu_freq_per_core': [{'current': 1497.999, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.116, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.645, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.653, 'min': 1500.0, 'max': 2250.0}, {'current': 1800.078, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.504, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.912, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.961, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.398, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.499, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.563, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.116, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.701, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.904, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.874, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.459, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.754, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.691, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.563, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.009, 'min': 1500.0, 'max': 2250.0}, {'current': 1799.463, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.683, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.794, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.787, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.429, 'min': 1500.0, 'max': 2250.0}, {'current': 1796.351, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.91, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.918, 'min': 1500.0, 'max': 2250.0}, {'current': 2484.036, 'min': 1500.0, 'max': 2250.0}, {'current': 1504.658, 'min': 1500.0, 'max': 2250.0}, {'current': 1510.799, 'min': 1500.0, 'max': 2250.0}, {'current': 1740.131, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.024, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.75, 'min': 1500.0, 'max': 2250.0}, {'current': 1798.541, 'min': 1500.0, 'max': 2250.0}, {'current': 1500.027, 'min': 1500.0, 'max': 2250.0}, {'current': 1509.715, 'min': 1500.0, 'max': 2250.0}, {'current': 1509.452, 'min': 1500.0, 'max': 2250.0}, {'current': 3376.17, 'min': 1500.0, 'max': 2250.0}, {'current': 1508.933, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.063, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.043, 'min': 1500.0, 'max': 2250.0}, {'current': 1798.93, 'min': 1500.0, 'max': 2250.0}, {'current': 1800.968, 'min': 1500.0, 'max': 2250.0}, {'current': 1508.812, 'min': 1500.0, 'max': 2250.0}, {'current': 1508.031, 'min': 1500.0, 'max': 2250.0}, {'current': 3405.095, 'min': 1500.0, 'max': 2250.0}, {'current': 1697.183, 'min': 1500.0, 'max': 2250.0}, {'current': 1500.027, 'min': 1500.0, 'max': 2250.0}, {'current': 1799.473, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.412, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.867, 'min': 1500.0, 'max': 2250.0}, {'current': 1800.102, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.116, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.012, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.163, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.388, 'min': 1500.0, 'max': 2250.0}, {'current': 1799.96, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.853, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.993, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.138, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.636, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.054, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.285, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.839, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.785, 'min': 1500.0, 'max': 2250.0}, {'current': 1801.937, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.751, 'min': 1500.0, 'max': 2250.0}, {'current': 1743.155, 'min': 1500.0, 'max': 2250.0}, {'current': 2458.356, 'min': 1500.0, 'max': 2250.0}, {'current': 1741.907, 'min': 1500.0, 'max': 2250.0}, {'current': 1504.827, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.252, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.974, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.613, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.589, 'min': 1500.0, 'max': 2250.0}, {'current': 1509.281, 'min': 1500.0, 'max': 2250.0}, {'current': 1685.061, 'min': 1500.0, 'max': 2250.0}, {'current': 3389.088, 'min': 1500.0, 'max': 2250.0}, {'current': 1698.508, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.884, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.19, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.979, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.238, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.095, 'min': 1500.0, 'max': 2250.0}, {'current': 1780.467, 'min': 1500.0, 'max': 2250.0}, {'current': 1432.333, 'min': 1500.0, 'max': 2250.0}, {'current': 1619.115, 'min': 1500.0, 'max': 2250.0}, {'current': 1392.176, 'min': 1500.0, 'max': 2250.0}, {'current': 1609.609, 'min': 1500.0, 'max': 2250.0}, {'current': 1622.309, 'min': 1500.0, 'max': 2250.0}, {'current': 1613.067, 'min': 1500.0, 'max': 2250.0}, {'current': 1369.407, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.515, 'min': 1500.0, 'max': 2250.0}, {'current': 1365.46, 'min': 1500.0, 'max': 2250.0}, {'current': 1612.337, 'min': 1500.0, 'max': 2250.0}, {'current': 3322.867, 'min': 1500.0, 'max': 2250.0}, {'current': 1596.266, 'min': 1500.0, 'max': 2250.0}, {'current': 1586.606, 'min': 1500.0, 'max': 2250.0}, {'current': 1698.639, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.432, 'min': 1500.0, 'max': 2250.0}, {'current': 1476.206, 'min': 1500.0, 'max': 2250.0}, {'current': 1796.668, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.601, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.686, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.604, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.076, 'min': 1500.0, 'max': 2250.0}, {'current': 1796.554, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.807, 'min': 1500.0, 'max': 2250.0}, {'current': 1500.356, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.338, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.56, 'min': 1500.0, 'max': 2250.0}, {'current': 1698.319, 'min': 1500.0, 'max': 2250.0}, {'current': 1509.992, 'min': 1500.0, 'max': 2250.0}, {'current': 3386.193, 'min': 1500.0, 'max': 2250.0}, {'current': 2457.753, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.334, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.897, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.858, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.183, 'min': 1500.0, 'max': 2250.0}, {'current': 1687.706, 'min': 1500.0, 'max': 2250.0}, {'current': 3036.896, 'min': 1500.0, 'max': 2250.0}, {'current': 1617.426, 'min': 1500.0, 'max': 2250.0}, {'current': 1610.966, 'min': 1500.0, 'max': 2250.0}, {'current': 1608.918, 'min': 1500.0, 'max': 2250.0}, {'current': 1445.396, 'min': 1500.0, 'max': 2250.0}, {'current': 1614.861, 'min': 1500.0, 'max': 2250.0}, {'current': 3392.665, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.706, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.927, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.727, 'min': 1500.0, 'max': 2250.0}, {'current': 1386.219, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.926, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.123, 'min': 1500.0, 'max': 2250.0}, {'current': 1477.327, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.198, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.804, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.169, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.64, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.023, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.369, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.462, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.942, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.787, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.512, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.844, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.401, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.916, 'min': 1500.0, 'max': 2250.0}, {'current': 2377.961, 'min': 1500.0, 'max': 2250.0}, {'current': 1469.901, 'min': 1500.0, 'max': 2250.0}, {'current': 1489.619, 'min': 1500.0, 'max': 2250.0}, {'current': 1484.527, 'min': 1500.0, 'max': 2250.0}, {'current': 1491.571, 'min': 1500.0, 'max': 2250.0}, {'current': 1798.218, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.474, 'min': 1500.0, 'max': 2250.0}, {'current': 1795.733, 'min': 1500.0, 'max': 2250.0}, {'current': 3015.425, 'min': 1500.0, 'max': 2250.0}, {'current': 1511.081, 'min': 1500.0, 'max': 2250.0}, {'current': 1509.079, 'min': 1500.0, 'max': 2250.0}, {'current': 1697.795, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.581, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.028, 'min': 1500.0, 'max': 2250.0}, {'current': 1798.1, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.372, 'min': 1500.0, 'max': 2250.0}, {'current': 1510.209, 'min': 1500.0, 'max': 2250.0}, {'current': 1507.775, 'min': 1500.0, 'max': 2250.0}, {'current': 3393.568, 'min': 1500.0, 'max': 2250.0}, {'current': 1509.279, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.7, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.764, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.016, 'min': 1500.0, 'max': 2250.0}, {'current': 1795.009, 'min': 1500.0, 'max': 2250.0}, {'current': 1508.727, 'min': 1500.0, 'max': 2250.0}, {'current': 1509.724, 'min': 1500.0, 'max': 2250.0}, {'current': 3389.598, 'min': 1500.0, 'max': 2250.0}, {'current': 1696.857, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.802, 'min': 1500.0, 'max': 2250.0}, {'current': 1799.867, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.994, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.45, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.549, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.372, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.387, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.714, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.639, 'min': 1500.0, 'max': 2250.0}, {'current': 1800.623, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.01, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.048, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.817, 'min': 1500.0, 'max': 2250.0}, {'current': 1495.828, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.238, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.171, 'min': 1500.0, 'max': 2250.0}, {'current': 1399.021, 'min': 1500.0, 'max': 2250.0}, {'current': 1325.536, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.522, 'min': 1500.0, 'max': 2250.0}, {'current': 1372.915, 'min': 1500.0, 'max': 2250.0}, {'current': 1608.368, 'min': 1500.0, 'max': 2250.0}, {'current': 1632.007, 'min': 1500.0, 'max': 2250.0}, {'current': 1801.107, 'min': 1500.0, 'max': 2250.0}, {'current': 1495.508, 'min': 1500.0, 'max': 2250.0}, {'current': 1475.034, 'min': 1500.0, 'max': 2250.0}, {'current': 1615.161, 'min': 1500.0, 'max': 2250.0}, {'current': 1444.244, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.709, 'min': 1500.0, 'max': 2250.0}, {'current': 1505.254, 'min': 1500.0, 'max': 2250.0}, {'current': 1694.138, 'min': 1500.0, 'max': 2250.0}, {'current': 3312.206, 'min': 1500.0, 'max': 2250.0}, {'current': 1695.892, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.222, 'min': 1500.0, 'max': 2250.0}, {'current': 1798.593, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.526, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.887, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.29, 'min': 1500.0, 'max': 2250.0}, {'current': 1798.411, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.437, 'min': 1500.0, 'max': 2250.0}, {'current': 1795.844, 'min': 1500.0, 'max': 2250.0}, {'current': 1499.284, 'min': 1500.0, 'max': 2250.0}, {'current': 1798.954, 'min': 1500.0, 'max': 2250.0}, {'current': 1800.264, 'min': 1500.0, 'max': 2250.0}, {'current': 1797.425, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.791, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.066, 'min': 1500.0, 'max': 2250.0}, {'current': 1497.296, 'min': 1500.0, 'max': 2250.0}, {'current': 1798.676, 'min': 1500.0, 'max': 2250.0}, {'current': 3391.457, 'min': 1500.0, 'max': 2250.0}, {'current': 1683.66, 'min': 1500.0, 'max': 2250.0}, {'current': 2356.629, 'min': 1500.0, 'max': 2250.0}, {'current': 2216.673, 'min': 1500.0, 'max': 2250.0}, {'current': 1395.239, 'min': 1500.0, 'max': 2250.0}, {'current': 1343.256, 'min': 1500.0, 'max': 2250.0}, {'current': 2050.822, 'min': 1500.0, 'max': 2250.0}, {'current': 1889.685, 'min': 1500.0, 'max': 2250.0}, {'current': 1310.3, 'min': 1500.0, 'max': 2250.0}, {'current': 1864.572, 'min': 1500.0, 'max': 2250.0}, {'current': 1310.406, 'min': 1500.0, 'max': 2250.0}, {'current': 1634.92, 'min': 1500.0, 'max': 2250.0}, {'current': 1291.512, 'min': 1500.0, 'max': 2250.0}, {'current': 1460.556, 'min': 1500.0, 'max': 2250.0}, {'current': 1401.166, 'min': 1500.0, 'max': 2250.0}, {'current': 1399.395, 'min': 1500.0, 'max': 2250.0}, {'current': 1612.94, 'min': 1500.0, 'max': 2250.0}, {'current': 1445.831, 'min': 1500.0, 'max': 2250.0}, {'current': 3307.268, 'min': 1500.0, 'max': 2250.0}, {'current': 1614.867, 'min': 1500.0, 'max': 2250.0}, {'current': 1397.588, 'min': 1500.0, 'max': 2250.0}, {'current': 1400.338, 'min': 1500.0, 'max': 2250.0}, {'current': 1496.476, 'min': 1500.0, 'max': 2250.0}, {'current': 1498.031, 'min': 1500.0, 'max': 2250.0}, {'current': 1699.162, 'min': 1500.0, 'max': 2250.0}, {'current': 3318.967, 'min': 1500.0, 'max': 2250.0}, {'current': 1698.176, 'min': 1500.0, 'max': 2250.0}, {'current': 1700.662, 'min': 1500.0, 'max': 2250.0}, {'current': 1696.599, 'min': 1500.0, 'max': 2250.0}, {'current': 1510.347, 'min': 1500.0, 'max': 2250.0}, {'current': 1695.853, 'min': 1500.0, 'max': 2250.0}], 'disk': {'/': {'total': 434.3343200683594, 'used': 58.36655044555664}}, 'gpu': 'Quadro RTX 8000', 'gpu_count': 10, 'gpu_devices': [{'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}, {'name': 'Quadro RTX 8000', 'memory_total': 48318382080}], 'memory': {'total': 2011.7494354248047}}
+2024-07-18 14:44:40,936 INFO    HandlerThread:2164077 [system_monitor.py:probe():224] Finished collecting system info
+2024-07-18 14:44:40,936 INFO    HandlerThread:2164077 [system_monitor.py:probe():227] Publishing system info
+2024-07-18 14:44:40,936 DEBUG   HandlerThread:2164077 [system_info.py:_save_conda():209] Saving list of conda packages installed into the current environment
+2024-07-18 14:44:40,937 ERROR   HandlerThread:2164077 [system_info.py:_save_conda():223] Error saving conda packages: [Errno 2] No such file or directory: 'conda'
+Traceback (most recent call last):
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/wandb/sdk/internal/system/system_info.py", line 216, in _save_conda
+    subprocess.call(
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/subprocess.py", line 389, in call
+    with Popen(*popenargs, **kwargs) as p:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'conda'
+2024-07-18 14:44:40,938 DEBUG   HandlerThread:2164077 [system_info.py:_save_conda():224] Saving conda packages done
+2024-07-18 14:44:40,940 INFO    HandlerThread:2164077 [system_monitor.py:probe():229] Finished publishing system info
+2024-07-18 14:44:40,943 DEBUG   SenderThread:2164077 [sender.py:send():379] send: files
+2024-07-18 14:44:40,943 INFO    SenderThread:2164077 [sender.py:_save_file():1454] saving file wandb-metadata.json with policy now
+2024-07-18 14:44:41,034 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: python_packages
+2024-07-18 14:44:41,034 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: python_packages
+2024-07-18 14:44:41,035 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: stop_status
+2024-07-18 14:44:41,036 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: stop_status
+2024-07-18 14:44:41,037 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-18 14:44:41,141 DEBUG   SenderThread:2164077 [sender.py:send():379] send: telemetry
+2024-07-18 14:44:41,328 INFO    wandb-upload_0:2164077 [upload_job.py:push():130] Uploaded file /tmp/user/22781/tmpr_oqcfanwandb/qm8at9tl-wandb-metadata.json
+2024-07-18 14:44:41,726 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_created():271] file/dir created: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/output.log
+2024-07-18 14:44:41,727 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_created():271] file/dir created: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/wandb-metadata.json
+2024-07-18 14:44:41,727 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_created():271] file/dir created: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/requirements.txt
+2024-07-18 14:44:41,727 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_created():271] file/dir created: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/conda-environment.yaml
+2024-07-18 14:44:42,036 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-18 14:44:43,036 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-18 14:44:43,726 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_modified():288] file/dir modified: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/output.log
+2024-07-18 14:44:44,036 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-18 14:44:45,037 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-18 14:44:46,036 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: status_report
+2024-07-18 14:44:46,037 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-18 14:44:47,037 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-18 14:44:47,924 DEBUG   SenderThread:2164077 [sender.py:send():379] send: exit
+2024-07-18 14:44:47,924 INFO    SenderThread:2164077 [sender.py:send_exit():586] handling exit code: 1
+2024-07-18 14:44:47,924 INFO    SenderThread:2164077 [sender.py:send_exit():588] handling runtime: 7
+2024-07-18 14:44:47,926 INFO    SenderThread:2164077 [sender.py:_save_file():1454] saving file wandb-summary.json with policy end
+2024-07-18 14:44:47,927 INFO    SenderThread:2164077 [sender.py:send_exit():594] send defer
+2024-07-18 14:44:47,927 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:47,927 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 0
+2024-07-18 14:44:47,927 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:47,928 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 0
+2024-07-18 14:44:47,928 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 1
+2024-07-18 14:44:47,928 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:47,928 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 1
+2024-07-18 14:44:47,928 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:47,928 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 1
+2024-07-18 14:44:47,928 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 2
+2024-07-18 14:44:47,928 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:47,928 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 2
+2024-07-18 14:44:47,929 INFO    HandlerThread:2164077 [system_monitor.py:finish():203] Stopping system monitor
+2024-07-18 14:44:47,929 DEBUG   SystemMonitor:2164077 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-07-18 14:44:47,930 INFO    HandlerThread:2164077 [interfaces.py:finish():200] Joined cpu monitor
+2024-07-18 14:44:47,930 DEBUG   SystemMonitor:2164077 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-07-18 14:44:47,931 INFO    HandlerThread:2164077 [interfaces.py:finish():200] Joined disk monitor
+2024-07-18 14:44:47,931 DEBUG   SystemMonitor:2164077 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-07-18 14:44:48,729 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_created():271] file/dir created: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/wandb-summary.json
+2024-07-18 14:44:50,730 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_modified():288] file/dir modified: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/output.log
+2024-07-18 14:44:50,877 INFO    HandlerThread:2164077 [interfaces.py:finish():200] Joined gpu monitor
+2024-07-18 14:44:50,877 INFO    HandlerThread:2164077 [interfaces.py:finish():200] Joined memory monitor
+2024-07-18 14:44:50,878 INFO    HandlerThread:2164077 [interfaces.py:finish():200] Joined network monitor
+2024-07-18 14:44:50,878 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: poll_exit
+2024-07-18 14:44:50,878 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:50,879 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 2
+2024-07-18 14:44:50,879 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 3
+2024-07-18 14:44:50,879 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:50,879 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 3
+2024-07-18 14:44:50,880 DEBUG   SenderThread:2164077 [sender.py:send():379] send: stats
+2024-07-18 14:44:50,881 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: poll_exit
+2024-07-18 14:44:50,882 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:50,882 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 3
+2024-07-18 14:44:50,882 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 4
+2024-07-18 14:44:50,882 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:50,882 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 4
+2024-07-18 14:44:50,885 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:50,885 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 4
+2024-07-18 14:44:50,885 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 5
+2024-07-18 14:44:50,885 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:50,886 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 5
+2024-07-18 14:44:50,886 DEBUG   SenderThread:2164077 [sender.py:send():379] send: summary
+2024-07-18 14:44:50,887 INFO    SenderThread:2164077 [sender.py:_save_file():1454] saving file wandb-summary.json with policy end
+2024-07-18 14:44:50,887 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:50,887 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 5
+2024-07-18 14:44:50,887 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 6
+2024-07-18 14:44:50,887 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:50,887 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 6
+2024-07-18 14:44:50,888 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:50,888 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 6
+2024-07-18 14:44:50,892 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: status_report
+2024-07-18 14:44:50,925 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: poll_exit
+2024-07-18 14:44:50,987 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 7
+2024-07-18 14:44:50,988 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: poll_exit
+2024-07-18 14:44:50,988 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:50,988 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 7
+2024-07-18 14:44:50,988 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:50,989 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 7
+2024-07-18 14:44:51,730 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_modified():288] file/dir modified: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/wandb-summary.json
+2024-07-18 14:44:51,730 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_modified():288] file/dir modified: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/config.yaml
+2024-07-18 14:44:51,884 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 8
+2024-07-18 14:44:51,884 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:51,884 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 8
+2024-07-18 14:44:51,885 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:51,885 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 8
+2024-07-18 14:44:51,885 INFO    SenderThread:2164077 [job_builder.py:build():440] Attempting to build job artifact
+2024-07-18 14:44:51,886 INFO    SenderThread:2164077 [job_builder.py:_get_source_type():569] is repo sourced job
+2024-07-18 14:44:51,886 WARNING SenderThread:2164077 [job_builder.py:_log_if_verbose():274] No program path found, not creating job artifact. See https://docs.wandb.ai/guides/launch/create-job
+2024-07-18 14:44:51,886 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 9
+2024-07-18 14:44:51,886 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:51,886 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 9
+2024-07-18 14:44:51,887 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:51,887 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 9
+2024-07-18 14:44:51,887 INFO    SenderThread:2164077 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-07-18 14:44:51,927 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: poll_exit
+2024-07-18 14:44:52,730 INFO    Thread-12 :2164077 [dir_watcher.py:_on_file_modified():288] file/dir modified: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/output.log
+2024-07-18 14:44:52,731 INFO    SenderThread:2164077 [dir_watcher.py:finish():388] scan: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files
+2024-07-18 14:44:52,731 INFO    SenderThread:2164077 [dir_watcher.py:finish():402] scan save: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/conda-environment.yaml conda-environment.yaml
+2024-07-18 14:44:52,731 INFO    SenderThread:2164077 [dir_watcher.py:finish():402] scan save: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/wandb-summary.json wandb-summary.json
+2024-07-18 14:44:52,731 INFO    SenderThread:2164077 [dir_watcher.py:finish():402] scan save: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/output.log output.log
+2024-07-18 14:44:52,732 INFO    SenderThread:2164077 [dir_watcher.py:finish():402] scan save: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/requirements.txt requirements.txt
+2024-07-18 14:44:52,732 INFO    SenderThread:2164077 [dir_watcher.py:finish():402] scan save: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/wandb-metadata.json wandb-metadata.json
+2024-07-18 14:44:52,732 INFO    SenderThread:2164077 [dir_watcher.py:finish():402] scan save: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/config.yaml config.yaml
+2024-07-18 14:44:52,735 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 10
+2024-07-18 14:44:52,735 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: poll_exit
+2024-07-18 14:44:52,736 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:52,736 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 10
+2024-07-18 14:44:52,736 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:52,736 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 10
+2024-07-18 14:44:52,736 INFO    SenderThread:2164077 [file_pusher.py:finish():169] shutting down file pusher
+2024-07-18 14:44:52,927 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: poll_exit
+2024-07-18 14:44:52,928 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: poll_exit
+2024-07-18 14:44:53,015 INFO    wandb-upload_0:2164077 [upload_job.py:push():130] Uploaded file /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/wandb-summary.json
+2024-07-18 14:44:53,029 INFO    wandb-upload_1:2164077 [upload_job.py:push():130] Uploaded file /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/output.log
+2024-07-18 14:44:53,038 INFO    wandb-upload_3:2164077 [upload_job.py:push():130] Uploaded file /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/config.yaml
+2024-07-18 14:44:53,065 INFO    wandb-upload_2:2164077 [upload_job.py:push():130] Uploaded file /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/files/requirements.txt
+2024-07-18 14:44:53,265 INFO    Thread-11 (_thread_body):2164077 [sender.py:transition_state():614] send defer: 11
+2024-07-18 14:44:53,266 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:53,266 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 11
+2024-07-18 14:44:53,267 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:53,267 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 11
+2024-07-18 14:44:53,267 INFO    SenderThread:2164077 [file_pusher.py:join():175] waiting for file pusher
+2024-07-18 14:44:53,267 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 12
+2024-07-18 14:44:53,267 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:53,267 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 12
+2024-07-18 14:44:53,268 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:53,268 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 12
+2024-07-18 14:44:53,268 INFO    SenderThread:2164077 [file_stream.py:finish():601] file stream finish called
+2024-07-18 14:44:53,352 INFO    SenderThread:2164077 [file_stream.py:finish():605] file stream finish is done
+2024-07-18 14:44:53,352 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 13
+2024-07-18 14:44:53,352 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:53,352 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 13
+2024-07-18 14:44:53,353 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:53,353 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 13
+2024-07-18 14:44:53,353 INFO    SenderThread:2164077 [sender.py:transition_state():614] send defer: 14
+2024-07-18 14:44:53,353 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: defer
+2024-07-18 14:44:53,353 INFO    HandlerThread:2164077 [handler.py:handle_request_defer():184] handle defer: 14
+2024-07-18 14:44:53,354 DEBUG   SenderThread:2164077 [sender.py:send():379] send: final
+2024-07-18 14:44:53,354 DEBUG   SenderThread:2164077 [sender.py:send():379] send: footer
+2024-07-18 14:44:53,354 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: defer
+2024-07-18 14:44:53,354 INFO    SenderThread:2164077 [sender.py:send_request_defer():610] handle sender defer: 14
+2024-07-18 14:44:53,355 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: poll_exit
+2024-07-18 14:44:53,355 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: poll_exit
+2024-07-18 14:44:53,356 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: server_info
+2024-07-18 14:44:53,356 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: server_info
+2024-07-18 14:44:53,359 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: poll_exit
+2024-07-18 14:44:53,360 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: get_summary
+2024-07-18 14:44:53,360 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: sampled_history
+2024-07-18 14:44:53,360 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: internal_messages
+2024-07-18 14:44:53,411 DEBUG   SenderThread:2164077 [sender.py:send_request():406] send_request: poll_exit
+2024-07-18 14:44:53,412 INFO    MainThread:2164077 [wandb_run.py:_footer_history_summary_info():3991] rendering history
+2024-07-18 14:44:53,412 INFO    MainThread:2164077 [wandb_run.py:_footer_history_summary_info():4023] rendering summary
+2024-07-18 14:44:53,412 INFO    MainThread:2164077 [wandb_run.py:_footer_sync_info():3950] logging synced files
+2024-07-18 14:44:53,413 DEBUG   HandlerThread:2164077 [handler.py:handle_request():158] handle_request: shutdown
+2024-07-18 14:44:53,413 INFO    HandlerThread:2164077 [handler.py:finish():882] shutting down handler
+2024-07-18 14:44:54,359 INFO    WriterThread:2164077 [datastore.py:close():296] close: /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/wandb/run-20240718_144440-xvy3ocvx/run-xvy3ocvx.wandb
+2024-07-18 14:44:54,412 INFO    SenderThread:2164077 [sender.py:finish():1608] shutting down sender
+2024-07-18 14:44:54,412 INFO    SenderThread:2164077 [file_pusher.py:finish():169] shutting down file pusher
+2024-07-18 14:44:54,412 INFO    SenderThread:2164077 [file_pusher.py:join():175] waiting for file pusher
