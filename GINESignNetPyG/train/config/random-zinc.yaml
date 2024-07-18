@@ -10,7 +10,8 @@ model:
   nlayer_inner: 1
   pool: add
 train:
-  epochs: 450
+  epochs: 310
+  batch_size: 100
   num_samples: 100
   dropout: 0.4
 test:

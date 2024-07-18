@@ -1,0 +1,38 @@
+
+bathcnorm BN
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 110, in <module>
+    run(config_path, cfg, create_dataset, create_model, train, test)
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py", line 47, in run
+    train_loss = train(train_loader, model, optimizer, device=cfg.device, num_samples=cfg.train.num_samples)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 71, in train
+    loss = (model(data, rand_x).squeeze() - y).abs().mean()
+            ^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/sign_net.py", line 149, in forward
+    return self.gnn(data, x_rand)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/model.py", line 182, in forward
+    x = scatter(x, data.batch, dim=0, reduce='add')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch_scatter/scatter.py", line 152, in scatter
+    return scatter_sum(src, index, dim, out, dim_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch_scatter/scatter.py", line 19, in scatter_sum
+    size[dim] = int(index.max()) + 1
+                ^^^^^^^^^^^^^^^^
+KeyboardInterrupt

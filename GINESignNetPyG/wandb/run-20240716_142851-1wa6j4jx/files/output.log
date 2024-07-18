@@ -1,0 +1,157 @@
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(34)run()
+-> for run in range(1, cfg.train.runs+1):
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(36)run()
+-> model = create_model(cfg).to(cfg.device)
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+batchnorm BN
+hidden 6
+BN? True
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(38)run()
+-> model.reset_parameters()
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(39)run()
+-> optimizer = torch.optim.Adam(model.parameters(), lr=cfg.train.lr, weight_decay=cfg.train.wd)
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(40)run()
+-> scheduler = StepLR(optimizer, step_size=cfg.train.lr_patience, gamma=cfg.train.lr_decay)
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(43)run()
+-> start_outer = time.time()
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(44)run()
+-> best_val_perf = test_perf = float('-inf')
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(45)run()
+-> for epoch in range(1, cfg.train.epochs+1):
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(46)run()
+-> start = time.time()
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(47)run()
+-> model.train()
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(48)run()
+-> train_loss = train(train_loader, model, optimizer, device=cfg.device, num_samples=cfg.train.num_samples)
+--Call--
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(137)__getattr__()
+-> def __getattr__(self, name):
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(138)__getattr__()
+-> if name in self:
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(139)__getattr__()
+-> return self[name]
+--Return--
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(139)__getattr__()->0
+-> return self[name]
+--Call--
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(137)__getattr__()
+-> def __getattr__(self, name):
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(138)__getattr__()
+-> if name in self:
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(139)__getattr__()
+-> return self[name]
+--Return--
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(139)__getattr__()->CfgNode({'bat...amples': 100})
+-> return self[name]
+--Call--
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(137)__getattr__()
+-> def __getattr__(self, name):
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(138)__getattr__()
+-> if name in self:
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(139)__getattr__()
+-> return self[name]
+--Return--
+> /lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/yacs/config.py(139)__getattr__()->100
+-> return self[name]
+--Call--
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py(66)train()
+-> def train(train_loader, model, optimizer, device, num_samples):
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py(67)train()
+-> total_loss = 0
+ 62  	
+ 63  	    return model
+ 64  	
+ 65  	
+ 66  	def train(train_loader, model, optimizer, device, num_samples):
+ 67  ->	    total_loss = 0
+ 68  	    N = 0
+ 69  	    for data in train_loader:
+ 70  	        if isinstance(data, list):
+ 71  	            data, y, num_graphs = [d.to(device) for d in data], data[0].y, data[0].num_graphs
+ 72  	        else:
+<torch_geometric.loader.dataloader.DataLoader object at 0x7f6be64bab90>
+*** TypeError: 'DataLoader' object is not subscriptable
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py(68)train()
+-> N = 0
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py(69)train()
+-> for data in train_loader:
+bdb.BdbQuit: Caught BdbQuit in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch_geometric/data/dataset.py", line 290, in __getitem__
+    data = data if self.transform is None else self.transform(data)
+                                               ^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/transform.py", line 18, in __call__
+    return data
+           ^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/bdb.py", line 90, in trace_dispatch
+    return self.dispatch_line(frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/bdb.py", line 115, in dispatch_line
+    if self.quitting: raise BdbQuit
+                      ^^^^^^^^^^^^^
+bdb.BdbQuit
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py(69)train()
+-> for data in train_loader:
+--Return--
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py(69)train()->None
+-> for data in train_loader:
+*** NameError: name 'data' is not defined
+bdb.BdbQuit: Caught BdbQuit in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch_geometric/data/dataset.py", line 290, in __getitem__
+    data = data if self.transform is None else self.transform(data)
+                                               ^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/transform.py", line 18, in __call__
+    return data
+           ^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/bdb.py", line 90, in trace_dispatch
+    return self.dispatch_line(frame)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/bdb.py", line 115, in dispatch_line
+    if self.quitting: raise BdbQuit
+                      ^^^^^^^^^^^^^
+bdb.BdbQuit
+> /lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py(48)run()
+-> train_loss = train(train_loader, model, optimizer, device=cfg.device, num_samples=cfg.train.num_samples)
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 260, in <module>
+    run(config_path, cfg, create_dataset, create_model, train, test)
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/bdb.py", line 96, in trace_dispatch
+    return self.dispatch_exception(frame, arg)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/bdb.py", line 176, in dispatch_exception
+    if self.quitting: raise BdbQuit
+                      ^^^^^^^^^^^^^
+bdb.BdbQuit

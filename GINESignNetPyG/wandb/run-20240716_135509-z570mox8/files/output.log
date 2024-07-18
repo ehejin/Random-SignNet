@@ -1,0 +1,53 @@
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+BN? True
+batchnorm BN
+hidden 6
+BN? True
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 260, in <module>
+    run(config_path, cfg, create_dataset, create_model, train, test)
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py", line 47, in run
+    train_loss = train(train_loader, model, optimizer, device=cfg.device, num_samples=cfg.train.num_samples)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 69, in train
+    for data in train_loader:
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 1346, in _next_data
+    return self._process_data(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 1372, in _process_data
+    data.reraise()
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/_utils.py", line 705, in reraise
+    raise exception
+AttributeError: Caught AttributeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/worker.py", line 308, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 51, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/lfs/hyperturing1/0/echoi1/env/micromamba/envs/graphenv/lib/python3.11/site-packages/torch_geometric/data/dataset.py", line 290, in __getitem__
+    data = data if self.transform is None else self.transform(data)
+                                               ^^^^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/transform.py", line 13, in __call__
+    data.laplacian = L.todense()
+                     ^^^^^^^^^
+AttributeError: 'Tensor' object has no attribute 'todense'

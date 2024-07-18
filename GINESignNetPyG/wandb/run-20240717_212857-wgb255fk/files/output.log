@@ -1,0 +1,14 @@
+
+RANDOM
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 282, in <module>
+    run(config_path, cfg, create_dataset, create_model, train, test)
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/core/train.py", line 33, in run
+    model = create_model(cfg).to(cfg.device)
+            ^^^^^^^^^^^^^^^^^
+  File "/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/train/zinc.py", line 65, in create_model
+    model = RandomGNN(None, None,
+            ^^^^^^^^^^^^^^^^^^^^^
+TypeError: RandomGNN.__init__() got an unexpected keyword argument 'bn'

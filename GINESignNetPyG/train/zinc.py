@@ -4,43 +4,34 @@ os.environ["CUDA_VISIBLE_DEVICES"]='3'
 import torch
 from core.config import cfg, update_cfg
 from core.train import run, run_k_fold
-from core.train import run, run_k_fold
 from core.model import GNN
-from core.sign_net import SignNetGNN, RandomGNN
+from core.sign_net import SignNetGNN, RandomGNN, SingleGNN
 from core.transform import EVDTransform
 import argparse
 from torch_geometric.datasets import ZINC
 import optuna
 import matplotlib.pyplot as plt
 import numpy as np
-from torch_geometric.utils import degree, is_undirected
+from torch_geometric.utils import degree, is_undirected, contains_self_loops
 
 def check_distinct(data):
     return len(data.eigen_values) == len(torch.unique(data.eigen_values)) 
-
-def get_laplacian(dataset):
-    degrees = degree(dataset.edge_index[0])
-    laplacian = torch.zeros(dataset.edge_index.size(1))
-    deg_0_sqrt = torch.sqrt(degrees[dataset.edge_index[0]])
-    deg_1_sqrt = torch.sqrt(degrees[dataset.edge_index[1]])
-    laplacian = -1 / (deg_0_sqrt * deg_1_sqrt)
-    return laplacian.unsqueeze(dim=1)
 
 def create_dataset(cfg): 
     torch.set_num_threads(cfg.num_workers)
     transform = transform_eval = EVDTransform('sym')
     # transform = transform_eval = None
-    root = 'data/ZINC'
+    root = 'data/ZINC/'
     train_dataset = ZINC(root, subset=True, split='train', transform=transform)
     # train_dataset.edge_index is undirected and no self loops
-    laplacian = get_laplacian(train_dataset)
-    train_dataset.edge_attr = torch.cat((train_dataset.edge_attr.unsqueeze(1), laplacian), dim=1)
+    #laplacian = get_laplacian(train_dataset)
+    #train_dataset.edge_attr = torch.cat((train_dataset.edge_attr.unsqueeze(1), laplacian), dim=1)
     val_dataset = ZINC(root, subset=True, split='val', transform=transform_eval) 
-    laplacian = get_laplacian(val_dataset)
-    val_dataset.edge_attr = torch.cat((val_dataset.edge_attr.unsqueeze(1), laplacian), dim=1)
+    #laplacian = get_laplacian(val_dataset)
+    #val_dataset.edge_attr = torch.cat((val_dataset.edge_attr.unsqueeze(1), laplacian), dim=1)
     test_dataset = ZINC(root, subset=True, split='test', transform=transform_eval) 
-    laplacian = get_laplacian(test_dataset)
-    test_dataset.edge_attr = torch.cat((test_dataset.edge_attr.unsqueeze(1), laplacian), dim=1)
+    #laplacian = get_laplacian(test_dataset)
+    #test_dataset.edge_attr = torch.cat((test_dataset.edge_attr.unsqueeze(1), laplacian), dim=1)
     return train_dataset, val_dataset, test_dataset
 
 def create_dataset_kfold(cfg): 
@@ -70,6 +61,15 @@ def create_model(cfg):
                            nl_signnet=cfg.model.num_layers_sign, 
                            nl_gnn=cfg.model.num_layers,
                            exp_after=cfg.model.exp_after)
+    elif cfg.model.gnn_type == 'attr':
+        model = SingleGNN(None, None,
+                           n_hid=cfg.model.hidden_size, 
+                           n_out=1, 
+                           bn=cfg.model.bn,
+                           res=cfg.model.res,
+                           gnn_type='SimplifiedPNAConv',
+                           nl_gnn=cfg.model.num_layers,
+                           exp_after=cfg.model.exp_after)
     else:
         model = GNN(None, None, 
                     nhid=cfg.model.hidden_size, 
@@ -92,9 +92,13 @@ def train(train_loader, model, optimizer, device, num_samples):
         else:
             data, y, num_graphs = data.to(device), data.y, data.num_graphs
         optimizer.zero_grad()
-        if num_samples is not None:
-            rand_x = torch.randn((data.x.shape[0], 1, num_samples)).to(device)
-            loss = (model(data, rand_x).squeeze() - y).abs().mean()
+        if num_samples is not None and num_samples != 'attr':
+            if num_samples == 'samples_only':
+                add_x = torch.randn(data.x.shape[0], 128, 100).to(torch.int64).to(device)
+                loss = (model(data, add_x).squeeze() - y).abs().mean()
+            else:
+                rand_x = torch.randn((data.x.shape[0], 1, num_samples)).to(device)
+                loss = (model(data, rand_x).squeeze() - y).abs().mean()
         else:
             loss = (model(data).squeeze() - y).abs().mean()
         with torch.autograd.set_detect_anomaly(True):
@@ -117,8 +121,12 @@ def test(loader, model, evaluator, device, num_samples):
         else:
             data, y, num_graphs = data.to(device), data.y, data.num_graphs
         if num_samples is not None:
-            rand_x = torch.randn((data.x.shape[0], 1, num_samples)).to(device)
-            total_error += (model(data, rand_x).squeeze() - y).abs().sum().item()
+            if num_samples == 'samples_only':
+                add_x = torch.randn(data.x.shape[0], 128, 100).to(torch.int64).to(device)
+                total_error += (model(data, add_x).squeeze() - y).abs().sum().item()
+            else:
+                rand_x = torch.randn((data.x.shape[0], 1, num_samples)).to(device)
+                total_error += (model(data, rand_x).squeeze() - y).abs().sum().item()
         else:
             total_error += (model(data).squeeze() - y).abs().sum().item()
         N += num_graphs
@@ -266,22 +274,18 @@ if __name__ == '__main__':
         #log_results(mock_study, f"/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/results.txt")
     parser = argparse.ArgumentParser(description="Run training with specified config file")
     parser.add_argument('--config', type=str, required=True, help="Path to the config file")
-    parser.add_argument('--gpu_id', type=int, required=False, help="GPU to use")
+    parser.add_argument('--k_fold', type=bool, default=False, help="Whether to run kfold hyperparam search")
     args = parser.parse_args()
     config_path = args.config
 
     cfg.set_new_allowed(True)
     cfg.merge_from_file(config_path)
     cfg = update_cfg(cfg)
-    #pruner = optuna.pruners.MedianPruner(5,70,2)
-    #study = optuna.create_study(direction='maximize', pruner=pruner)
-    #study.optimize(lambda trial: objective(trial, cfg), n_trials=70)
-    #save_visualizations(study, cfg, '/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG')
-
-    #log_results(study, f"/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/results2.txt")
-    run(config_path, cfg, create_dataset, create_model, train, test)
-
-    #cfg.set_new_allowed(True) 
-    #cfg.merge_from_file('train/config/random-zinc.yaml')
-    #cfg = update_cfg(cfg)
-    #run(cfg, create_dataset, create_model, train, test)
+    if args.k_fold:
+        pruner = optuna.pruners.MedianPruner(5,70,2)
+        study = optuna.create_study(direction='maximize', pruner=pruner)
+        study.optimize(lambda trial: objective(trial, cfg), n_trials=40)
+        save_visualizations(study, cfg, '/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG')
+        log_results(study, f"/lfs/hyperturing1/0/echoi1/Random-SignNet/GINESignNetPyG/results_val_2.txt")
+    else:
+        run(config_path, cfg, create_dataset, create_model, train, test)

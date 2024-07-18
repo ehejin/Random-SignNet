@@ -1,8 +1,9 @@
 import torch
 import time
 from core.log import config_logger
-from torch_geometric.loader import DataLoader
+from torch_geometric.data import DataLoader
 from torch.optim.lr_scheduler import StepLR
+import wandb
 import wandb
 
 def run(config_path, cfg, create_dataset, create_model, train, test, evaluator=None):
@@ -23,11 +24,13 @@ def run(config_path, cfg, create_dataset, create_model, train, test, evaluator=N
     test_perfs = []
     vali_perfs = []
     cfg_name = config_path[:-5]
+
     run = wandb.init(
-                project="my-awesome-project",
+                project="OG-RandomZinc",
                 config=cfg,
                 name=cfg_name
             )
+
     for run in range(1, cfg.train.runs+1):
         # 3. create model and opt
         model = create_model(cfg).to(cfg.device)
@@ -49,17 +52,16 @@ def run(config_path, cfg, create_dataset, create_model, train, test, evaluator=N
             # print(f"---{test(train_loader, model, evaluator=evaluator, device=cfg.device) }")
 
             model.eval()
-            val_perf = test(val_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.test.num_samples)
+            val_perf = test(val_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.train.num_samples)
             if val_perf > best_val_perf:
                 best_val_perf = val_perf
-                test_perf = test(test_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.test.num_samples) 
+                test_perf = test(test_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.train.num_samples) 
             time_per_epoch = time.time() - start 
 
             # logger here
             print(f'Epoch: {epoch:03d}, Train Loss: {train_loss:.4f}, '
                   f'Val: {val_perf:.4f}, Test: {test_perf:.4f}, Seconds: {time_per_epoch:.4f}, '
                   f'Memory Peak: {memory_allocated} MB allocated, {memory_reserved} MB reserved.')
-            
             wandb.log({"Train Loss": train_loss, "Val Loss": val_perf, "Test Loss": test_perf})
             # logging training
             #writer.add_scalar(f'Run{run}/train-loss', train_loss, epoch)
@@ -86,11 +88,10 @@ def run(config_path, cfg, create_dataset, create_model, train, test, evaluator=N
                 f'Seconds/epoch: {time_average_epoch/cfg.train.epochs}, Memory Peak: {memory_allocated} MB allocated, {memory_reserved} MB reserved.')
 
 
-def run_k_fold(run_name, cfg, create_dataset, create_model, train, test, evaluator=None, k=10):
+def run_k_fold(cfg, create_dataset, create_model, train, test, trial, evaluator=None, k=10):
     # if cfg.seed is not None:
 
-    writer, logger, config_string = config_logger(cfg)
-    dataset, _, _ = create_dataset(cfg)
+    _, dataset, _ = create_dataset(cfg)
 
     if hasattr(dataset, 'train_indices'):
         k_fold_indices = dataset.train_indices, dataset.test_indices
@@ -99,18 +100,15 @@ def run_k_fold(run_name, cfg, create_dataset, create_model, train, test, evaluat
 
     test_perfs = []
     test_curves = []
-    run = wandb.init(
-                project="graph-hyperparams",
-                config=cfg,
-                name=run_name
-            )
     for fold, (train_idx, test_idx) in enumerate(zip(*k_fold_indices)):
         set_random_seed(0) # important 
         
-        train_dataset = dataset[train_idx].copy()
-        test_dataset = dataset[test_idx].copy()
-        #test_dataset = [x for x in test_dataset]
-        #train_dataset = [x for x in train_dataset]
+        train_dataset = dataset[train_idx]
+        test_dataset = dataset[test_idx]
+        #train_dataset.transform = transform
+        #test_dataset.transform = transform_eval
+        test_dataset = [x for x in test_dataset]
+        train_dataset = [x for x in train_dataset]
 
         train_loader = DataLoader(train_dataset, cfg.train.batch_size, shuffle=True, num_workers=cfg.num_workers)
         test_loader = DataLoader(test_dataset,  cfg.train.batch_size, shuffle=False, num_workers=cfg.num_workers)
@@ -124,6 +122,7 @@ def run_k_fold(run_name, cfg, create_dataset, create_model, train, test, evaluat
         start_outer = time.time()
         best_test_perf = test_perf = float('-inf')
         test_curve = []
+        train_curve = []
         for epoch in range(1, cfg.train.epochs+1):
             start = time.time()
             model.train()
@@ -135,6 +134,7 @@ def run_k_fold(run_name, cfg, create_dataset, create_model, train, test, evaluat
             model.eval()
             test_perf = test(test_loader, model, evaluator=evaluator, device=cfg.device, num_samples=cfg.test.num_samples) 
             test_curve.append(test_perf)
+            train_curve.append(train_loss)
             best_test_perf = test_perf if test_perf > best_test_perf else best_test_perf
   
             time_per_epoch = time.time() - start 
@@ -150,7 +150,8 @@ def run_k_fold(run_name, cfg, create_dataset, create_model, train, test, evaluat
             #writer.add_scalar(f'Fold{fold}/test-best-perf', best_test_perf, epoch)
             #writer.add_scalar(f'Fold{fold}/seconds', time_per_epoch, epoch)   
             #writer.add_scalar(f'Fold{fold}/memory', memory_allocated, epoch)   
-            wandb.log({"Train Loss": train_loss, "Test Loss": test_perf})
+            trial.report(test_perf, epoch)
+            trial.set_user_attr(f'epoch_{epoch}_train_loss', train_loss)
 
             torch.cuda.empty_cache() # empty test part memory cost
 
@@ -159,10 +160,7 @@ def run_k_fold(run_name, cfg, create_dataset, create_model, train, test, evaluat
         test_perfs.append(best_test_perf)
         test_curves.append(test_curve)
 
-    logger.info("-"*50)
-    logger.info(config_string)
     test_perf = torch.tensor(test_perfs)
-    logger.info(" ===== Final result 1, based on average of max validation  ========")
     print(" ===== Final result 1, based on average of max validation  ========")
     msg = (
         f'Dataset:        {cfg.dataset}\n'
@@ -170,26 +168,22 @@ def run_k_fold(run_name, cfg, create_dataset, create_model, train, test, evaluat
         f'Seconds/epoch:  {time_average_epoch/cfg.train.epochs}\n'
         f'Memory Peak:    {memory_allocated} MB allocated, {memory_reserved} MB reserved.\n'
         '-------------------------------\n')
-    logger.info(msg)
     print(msg)  
 
-    logger.info("-"*50)
     test_curves = torch.tensor(test_curves)
     avg_test_curve = test_curves.mean(axis=0)
     best_index = np.argmax(avg_test_curve)
     mean_perf = avg_test_curve[best_index]
     std_perf = test_curves.std(axis=0)[best_index]
 
-    logger.info(" ===== Final result 2, based on average of validation curve ========")
     print(" ===== Final result 2, based on average of validation curve ========")
     msg = (
         f'Dataset:        {cfg.dataset}\n'
         f'Accuracy:       {mean_perf:.4f} ± {std_perf:.4f}\n'
         f'Best epoch:     {best_index}\n'
         '-------------------------------\n')
-    logger.info(msg)
-    print(msg)   
-    return test_perf.mean()
+    print(msg) 
+    return test_perf.mean(), test_curve, train_curve
 
 import random, numpy as np
 import warnings
@@ -221,7 +215,7 @@ def set_random_seed(seed=0, cuda_deterministic=True):
 
 from sklearn.model_selection import StratifiedKFold, KFold
 def k_fold(dataset, folds=10):
-    skf = KFold(folds, shuffle=True, random_state=12345) # change to Stratified KFold?
+    skf = KFold(folds, shuffle=True, random_state=12345)
 
     train_indices, test_indices = [], []
     ys = dataset.data.y

@@ -5,7 +5,7 @@ from torch_scatter import scatter
 from core.transform import to_dense_list_EVD
 
 import core.model_utils.masked_layers as masked_layers 
-from core.model import GNN, RGNN
+from core.model import GNN, RGNN, Single1GNN
 from core.model_utils.transformer_module import TransformerEncoderLayer, PositionalEncoding 
 from core.model_utils.elements import DiscreteEncoder
 
@@ -138,13 +138,24 @@ class SignNetGNN(nn.Module):
 
 
 class RandomGNN(nn.Module):
-    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn):
+    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn, bn, res, exp_after):
         super().__init__()
-        self.gnn = RGNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, gnn_type='RandPNAConv') #GINEConv
+        self.gnn = RGNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, bn=bn, gnn_type='RandPNAConv', res=res, exp_after=exp_after) #GINEConv
 
     def reset_parameters(self):
         self.gnn.reset_parameters()
 
-    def forward(self, data, x_rand):
-        return self.gnn(data, x_rand)
+    def forward(self, data, additional_x):
+        return self.gnn(data, additional_x)
+    
+class SingleGNN(nn.Module):
+    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_gnn, bn, res, exp_after, gnn_type):
+        super().__init__()
+        self.gnn = Single1GNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, bn=bn, gnn_type='SimplifiedPNAConv', res=res, exp_after=exp_after) #GINEConv
+
+    def reset_parameters(self):
+        self.gnn.reset_parameters()
+
+    def forward(self, data):
+        return self.gnn(data)
 

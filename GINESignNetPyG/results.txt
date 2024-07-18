@@ -1,0 +1,139 @@
+Best hyperparameters: {'learning_rate': 0.007773494906769786, 'weight_decay': 3.4541627134466558e-06, 'num_layers': 5}
+Best validation performance: 1.0
+
+Top 5 Trials:
+
+Trial 1:
+Number: 0
+Value: 1.0
+Params: {'learning_rate': 0.007773494906769786, 'weight_decay': 3.4541627134466558e-06, 'num_layers': 5}
+
+Train and Test Performance per Epoch:
+Epoch 1: Train Loss = 0.6666666666666666, Test Performance = 1.0
+Epoch 2: Train Loss = 0.4, Test Performance = 0.5
+Epoch 3: Train Loss = 0.2857142857142857, Test Performance = 0.3333333333333333
+Epoch 4: Train Loss = 0.2222222222222222, Test Performance = 0.25
+Epoch 5: Train Loss = 0.18181818181818182, Test Performance = 0.2
+Epoch 6: Train Loss = 0.15384615384615385, Test Performance = 0.16666666666666666
+Epoch 7: Train Loss = 0.13333333333333333, Test Performance = 0.14285714285714285
+Epoch 8: Train Loss = 0.11764705882352941, Test Performance = 0.125
+Epoch 9: Train Loss = 0.10526315789473684, Test Performance = 0.1111111111111111
+Epoch 10: Train Loss = 0.09523809523809523, Test Performance = 0.1
+Epoch 11: Train Loss = 0.08695652173913043, Test Performance = 0.09090909090909091
+Epoch 12: Train Loss = 0.08, Test Performance = 0.08333333333333333
+Epoch 13: Train Loss = 0.07407407407407407, Test Performance = 0.07692307692307693
+Epoch 14: Train Loss = 0.06896551724137931, Test Performance = 0.07142857142857142
+Epoch 15: Train Loss = 0.06451612903225806, Test Performance = 0.06666666666666667
+Epoch 16: Train Loss = 0.06060606060606061, Test Performance = 0.0625
+Epoch 17: Train Loss = 0.05714285714285714, Test Performance = 0.058823529411764705
+Epoch 18: Train Loss = 0.05405405405405406, Test Performance = 0.05555555555555555
+Epoch 19: Train Loss = 0.05128205128205128, Test Performance = 0.05263157894736842
+Epoch 20: Train Loss = 0.04878048780487805, Test Performance = 0.05
+
+Trial 2:
+Number: 1
+Value: 1.0
+Params: {'learning_rate': 4.969622252655821e-05, 'weight_decay': 6.484192583923499e-05, 'num_layers': 6}
+
+Train and Test Performance per Epoch:
+Epoch 1: Train Loss = 0.6666666666666666, Test Performance = 1.0
+Epoch 2: Train Loss = 0.4, Test Performance = 0.5
+Epoch 3: Train Loss = 0.2857142857142857, Test Performance = 0.3333333333333333
+Epoch 4: Train Loss = 0.2222222222222222, Test Performance = 0.25
+Epoch 5: Train Loss = 0.18181818181818182, Test Performance = 0.2
+Epoch 6: Train Loss = 0.15384615384615385, Test Performance = 0.16666666666666666
+Epoch 7: Train Loss = 0.13333333333333333, Test Performance = 0.14285714285714285
+Epoch 8: Train Loss = 0.11764705882352941, Test Performance = 0.125
+Epoch 9: Train Loss = 0.10526315789473684, Test Performance = 0.1111111111111111
+Epoch 10: Train Loss = 0.09523809523809523, Test Performance = 0.1
+Epoch 11: Train Loss = 0.08695652173913043, Test Performance = 0.09090909090909091
+Epoch 12: Train Loss = 0.08, Test Performance = 0.08333333333333333
+Epoch 13: Train Loss = 0.07407407407407407, Test Performance = 0.07692307692307693
+Epoch 14: Train Loss = 0.06896551724137931, Test Performance = 0.07142857142857142
+Epoch 15: Train Loss = 0.06451612903225806, Test Performance = 0.06666666666666667
+Epoch 16: Train Loss = 0.06060606060606061, Test Performance = 0.0625
+Epoch 17: Train Loss = 0.05714285714285714, Test Performance = 0.058823529411764705
+Epoch 18: Train Loss = 0.05405405405405406, Test Performance = 0.05555555555555555
+Epoch 19: Train Loss = 0.05128205128205128, Test Performance = 0.05263157894736842
+Epoch 20: Train Loss = 0.04878048780487805, Test Performance = 0.05
+
+Trial 3:
+Number: 2
+Value: 1.0
+Params: {'learning_rate': 0.00044551080089336317, 'weight_decay': 0.0006419981976042566, 'num_layers': 4}
+
+Train and Test Performance per Epoch:
+Epoch 1: Train Loss = 0.6666666666666666, Test Performance = 1.0
+Epoch 2: Train Loss = 0.4, Test Performance = 0.5
+Epoch 3: Train Loss = 0.2857142857142857, Test Performance = 0.3333333333333333
+Epoch 4: Train Loss = 0.2222222222222222, Test Performance = 0.25
+Epoch 5: Train Loss = 0.18181818181818182, Test Performance = 0.2
+Epoch 6: Train Loss = 0.15384615384615385, Test Performance = 0.16666666666666666
+Epoch 7: Train Loss = 0.13333333333333333, Test Performance = 0.14285714285714285
+Epoch 8: Train Loss = 0.11764705882352941, Test Performance = 0.125
+Epoch 9: Train Loss = 0.10526315789473684, Test Performance = 0.1111111111111111
+Epoch 10: Train Loss = 0.09523809523809523, Test Performance = 0.1
+Epoch 11: Train Loss = 0.08695652173913043, Test Performance = 0.09090909090909091
+Epoch 12: Train Loss = 0.08, Test Performance = 0.08333333333333333
+Epoch 13: Train Loss = 0.07407407407407407, Test Performance = 0.07692307692307693
+Epoch 14: Train Loss = 0.06896551724137931, Test Performance = 0.07142857142857142
+Epoch 15: Train Loss = 0.06451612903225806, Test Performance = 0.06666666666666667
+Epoch 16: Train Loss = 0.06060606060606061, Test Performance = 0.0625
+Epoch 17: Train Loss = 0.05714285714285714, Test Performance = 0.058823529411764705
+Epoch 18: Train Loss = 0.05405405405405406, Test Performance = 0.05555555555555555
+Epoch 19: Train Loss = 0.05128205128205128, Test Performance = 0.05263157894736842
+Epoch 20: Train Loss = 0.04878048780487805, Test Performance = 0.05
+
+Trial 4:
+Number: 3
+Value: 1.0
+Params: {'learning_rate': 0.00010876882433222679, 'weight_decay': 0.00019459775017987148, 'num_layers': 4}
+
+Train and Test Performance per Epoch:
+Epoch 1: Train Loss = 0.6666666666666666, Test Performance = 1.0
+Epoch 2: Train Loss = 0.4, Test Performance = 0.5
+Epoch 3: Train Loss = 0.2857142857142857, Test Performance = 0.3333333333333333
+Epoch 4: Train Loss = 0.2222222222222222, Test Performance = 0.25
+Epoch 5: Train Loss = 0.18181818181818182, Test Performance = 0.2
+Epoch 6: Train Loss = 0.15384615384615385, Test Performance = 0.16666666666666666
+Epoch 7: Train Loss = 0.13333333333333333, Test Performance = 0.14285714285714285
+Epoch 8: Train Loss = 0.11764705882352941, Test Performance = 0.125
+Epoch 9: Train Loss = 0.10526315789473684, Test Performance = 0.1111111111111111
+Epoch 10: Train Loss = 0.09523809523809523, Test Performance = 0.1
+Epoch 11: Train Loss = 0.08695652173913043, Test Performance = 0.09090909090909091
+Epoch 12: Train Loss = 0.08, Test Performance = 0.08333333333333333
+Epoch 13: Train Loss = 0.07407407407407407, Test Performance = 0.07692307692307693
+Epoch 14: Train Loss = 0.06896551724137931, Test Performance = 0.07142857142857142
+Epoch 15: Train Loss = 0.06451612903225806, Test Performance = 0.06666666666666667
+Epoch 16: Train Loss = 0.06060606060606061, Test Performance = 0.0625
+Epoch 17: Train Loss = 0.05714285714285714, Test Performance = 0.058823529411764705
+Epoch 18: Train Loss = 0.05405405405405406, Test Performance = 0.05555555555555555
+Epoch 19: Train Loss = 0.05128205128205128, Test Performance = 0.05263157894736842
+Epoch 20: Train Loss = 0.04878048780487805, Test Performance = 0.05
+
+Trial 5:
+Number: 4
+Value: 1.0
+Params: {'learning_rate': 0.005276598044594979, 'weight_decay': 1.7453787565245187e-06, 'num_layers': 5}
+
+Train and Test Performance per Epoch:
+Epoch 1: Train Loss = 0.6666666666666666, Test Performance = 1.0
+Epoch 2: Train Loss = 0.4, Test Performance = 0.5
+Epoch 3: Train Loss = 0.2857142857142857, Test Performance = 0.3333333333333333
+Epoch 4: Train Loss = 0.2222222222222222, Test Performance = 0.25
+Epoch 5: Train Loss = 0.18181818181818182, Test Performance = 0.2
+Epoch 6: Train Loss = 0.15384615384615385, Test Performance = 0.16666666666666666
+Epoch 7: Train Loss = 0.13333333333333333, Test Performance = 0.14285714285714285
+Epoch 8: Train Loss = 0.11764705882352941, Test Performance = 0.125
+Epoch 9: Train Loss = 0.10526315789473684, Test Performance = 0.1111111111111111
+Epoch 10: Train Loss = 0.09523809523809523, Test Performance = 0.1
+Epoch 11: Train Loss = 0.08695652173913043, Test Performance = 0.09090909090909091
+Epoch 12: Train Loss = 0.08, Test Performance = 0.08333333333333333
+Epoch 13: Train Loss = 0.07407407407407407, Test Performance = 0.07692307692307693
+Epoch 14: Train Loss = 0.06896551724137931, Test Performance = 0.07142857142857142
+Epoch 15: Train Loss = 0.06451612903225806, Test Performance = 0.06666666666666667
+Epoch 16: Train Loss = 0.06060606060606061, Test Performance = 0.0625
+Epoch 17: Train Loss = 0.05714285714285714, Test Performance = 0.058823529411764705
+Epoch 18: Train Loss = 0.05405405405405406, Test Performance = 0.05555555555555555
+Epoch 19: Train Loss = 0.05128205128205128, Test Performance = 0.05263157894736842
+Epoch 20: Train Loss = 0.04878048780487805, Test Performance = 0.05

@@ -1,0 +1,84 @@
+wandb_version: 1
+
+dataset:
+  desc: null
+  value: ZINC
+num_workers:
+  desc: null
+  value: 8
+device:
+  desc: null
+  value: 0
+handtune:
+  desc: null
+  value: ''
+seed:
+  desc: null
+  value: null
+downsample:
+  desc: null
+  value: false
+version:
+  desc: null
+  value: final
+task:
+  desc: null
+  value: -1
+train:
+  desc: null
+  value:
+    batch_size: 100
+    epochs: 310
+    runs: 3
+    lr: 0.001
+    lr_patience: 50
+    lr_decay: 0.5
+    wd: 0.0
+    dropout: 0.0
+    num_samples: 100
+model:
+  desc: null
+  value:
+    gnn_type: Random
+    hidden_size: 128
+    num_layers: 6
+    num_layers_sign: 4
+    pool: add
+    nlayer_inner: 1
+    bn: BN
+    res: false
+test:
+  desc: null
+  value:
+    num_samples: 100
+_wandb:
+  desc: null
+  value:
+    python_version: 3.11.9
+    cli_version: 0.17.4
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    start_time: 1721078721
+    t:
+      1:
+      - 1
+      - 5
+      - 53
+      - 55
+      - 77
+      2:
+      - 1
+      - 5
+      - 53
+      - 55
+      - 77
+      3:
+      - 13
+      - 16
+      - 23
+      4: 3.11.9
+      5: 0.17.4
+      8:
+      - 5
+      13: linux-x86_64

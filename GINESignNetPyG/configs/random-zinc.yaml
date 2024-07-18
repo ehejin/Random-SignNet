@@ -1,0 +1,17 @@
+dataset: ZINC
+model:
+  gnn_type: Random
+  num_layers: 6
+  nlayer_inner: 1
+  pool: add
+  bn: BN
+  res: False
+  exp_after: False
+  laplacian: True
+train:
+  epochs: 310
+  batch_size: 100
+  num_samples: 100
+  num_workers: 8
+test:
+  num_samples: 100
