@@ -7,7 +7,7 @@ Based on SignNet By Derek Lim*, Joshua Robinson*, Lingxiao Zhao, Tess Smidt, Suv
 `GINESignNetPyG` contains the core code for graph-level regression on ZINC.
 
 In this directory, to run random-gnn on zinc run the following:
-'''python -m train.zinc --config configs/random-zinc.yaml'''
+```python -m train.zinc --config configs/random-zinc.yaml``
 
 ## Implementations
 
