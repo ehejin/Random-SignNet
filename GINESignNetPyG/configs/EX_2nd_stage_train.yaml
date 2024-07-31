@@ -1,0 +1,41 @@
+#### Example config for second stage of training ###
+dataset: ZINC
+model:
+  gnn_type: Random # This model type does not use random samples, only node attributes+embeddings. Should probably rename
+  num_layers: 6
+  nlayer_inner: 1
+  pool: add
+  bn: False
+  res: False
+  exp_after: False
+  laplacian: True
+  hidden_size: 128
+  embedding_size: 40
+  transform: Laplacian
+# Model params used for loading embed model (copy from embed model config)
+embed_model: 
+  gnn_type: gae # gae or samples_only
+  num_layers: 6
+  nlayer_inner: 1
+  pool: add
+  bn: False
+  res: False
+  exp_after: False
+  laplacian: False
+  hidden_size: 100
+  transform: None
+  EMBED_SIZE: 40
+  nout: 1 #3
+  path: ./NODE_MODELS/gae2-encodermean.pth # path you saved model at 
+  normalize: True # whether you want to normalize your embeddings between 0 and 2
+train:
+  epochs: 170
+  batch_size: 100
+  num_samples: None # set to None if not using random samples
+  num_workers: 1
+test:
+  num_samples: None
+wandb: True
+regression: R
+model_path: None
+gae: False # We are not training a GAE model

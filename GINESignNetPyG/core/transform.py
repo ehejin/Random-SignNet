@@ -4,19 +4,28 @@ from torch_sparse import SparseTensor
 from torch_geometric.utils import get_laplacian, to_undirected
 from torch_geometric.utils import degree, contains_self_loops, add_self_loops
 
+
 # The needed pretransform to save result of EVD
 class EVDTransform(object): 
     def __init__(self, norm=None):
         super().__init__()
         self.norm = norm
     def __call__(self, data):
-        laplacian = get_laplacian(data)
-        data.edge_attr = torch.cat((data.edge_attr.unsqueeze(1), laplacian), dim=1)
-        '''D, V = EVD_Laplacian(data, self.norm)
-        data.eigen_values = D
-        data.eigen_vectors = V.reshape(-1) # reshape to 1-d to save'''
+        #laplacian = get_laplacian(data)
+        #data.edge_attr = torch.cat((data.edge_attr.unsqueeze(1), laplacian), dim=1).long()
+        #D, V = EVD_Laplacian(data, self.norm)
+        #data.eigen_values = D
+        #data.eigen_vectors = V.reshape(-1) # reshape to 1-d to save
         return data
-
+    
+class LAPTransform(object): 
+    def __init__(self, norm=None):
+        super().__init__()
+        self.norm = norm
+    def __call__(self, data):
+        laplacian = get_laplacian(data)
+        data.edge_attr = torch.cat((data.edge_attr.unsqueeze(1), laplacian), dim=1).long()
+        return data
 
 def get_laplacian(dataset):
     degrees = degree(dataset.edge_index[0])

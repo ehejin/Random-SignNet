@@ -2,10 +2,10 @@ import torch, numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 from torch_scatter import scatter
-from core.transform import to_dense_list_EVD
-
+#from core.transform import to_dense_list_EVD
+from core.model_utils.elements import MLP
 import core.model_utils.masked_layers as masked_layers 
-from core.model import GNN, RGNN, Single1GNN
+from core.model import GNN, RGNN, Single1GNN, RGNN_GRAPH, GraphAutoencoder
 from core.model_utils.transformer_module import TransformerEncoderLayer, PositionalEncoding 
 from core.model_utils.elements import DiscreteEncoder
 
@@ -111,8 +111,9 @@ class SignNet(nn.Module):
         pos = self.eigen_encoder2(eigS_dense.unsqueeze(-1), mask_full)
         pos = 0 # ignore eigenvalues 
 
-        # phi
-        x = self.phi(x, data.edge_index, data.edge_attr, mask_full) + self.phi(-x, data.edge_index, data.edge_attr, mask_full)
+        # phi CHANGES
+        #x = self.phi(x, data.edge_index, data.edge_attr, mask_full) + self.phi(-x, data.edge_index, data.edge_attr, mask_full)
+        x = self.phi(x, data.edge_index, None, mask_full) + self.phi(-x, data.edge_index, None, mask_full)
 
         # rho = Transformer
         x = self.rho(x, pos=pos, mask=mask_full)
@@ -126,27 +127,45 @@ class SignNetGNN(nn.Module):
         super().__init__()
         self.sign_net = SignNet(n_hid, nl_signnet, nl_rho=1)
         # output of signNet has size Nxn_hid
-        self.gnn = GNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, gnn_type='SimplifiedPNAConv') #GINEConv
+        #self.gnn = GNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, gnn_type='SimplifiedPNAConv') #GINEConv
+        self.output_encoder = MLP(n_hid, 1, nlayer=2, with_final_activation=False, with_norm=True)
 
     def reset_parameters(self):
         self.sign_net.reset_parameters()
-        self.gnn.reset_parameters()
+        #self.gnn.reset_parameters()
+        self.output_encoder.reset_parameters()
 
     def forward(self, data):
         pos = self.sign_net(data)
-        return self.gnn(data, pos)
+        #import pdb; pdb.set_trace()
+        pos = scatter(pos, data.batch, dim=0, reduce='add')
+        return self.output_encoder(pos)
+        #return self.gnn(data, pos)
 
 
 class RandomGNN(nn.Module):
-    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn, bn, res, exp_after):
+    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn, bn, res, exp_after, EMBED_SIZE, **kwargs):
         super().__init__()
-        self.gnn = RGNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, bn=bn, gnn_type='RandPNAConv', res=res, exp_after=exp_after) #GINEConv
+        self.gnn = RGNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, bn=bn, gnn_type='RandPNAConv', res=res, 
+                        exp_after=exp_after, EMBED_SIZE=EMBED_SIZE, **kwargs) #GINEConv
 
     def reset_parameters(self):
         self.gnn.reset_parameters()
 
     def forward(self, data, additional_x):
         return self.gnn(data, additional_x)
+    
+class RandomGNNGraph(nn.Module):
+    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, embedding_size, nl_gnn, bn, res, exp_after, **kwargs):
+        super().__init__()
+        self.gnn = RGNN_GRAPH(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, bn=bn, gnn_type='RandPNAConv_GRAPH', res=res, 
+                        exp_after=exp_after, embedding_size=embedding_size, **kwargs) #GINEConv
+
+    def reset_parameters(self):
+        self.gnn.reset_parameters()
+
+    def forward(self, data):
+        return self.gnn(data)
     
 class SingleGNN(nn.Module):
     def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_gnn, bn, res, exp_after, gnn_type):
@@ -158,4 +177,16 @@ class SingleGNN(nn.Module):
 
     def forward(self, data):
         return self.gnn(data)
+    
+class GAE(nn.Module):
+    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn, bn, res, exp_after, EMBED_SIZE, **kwargs):
+        super().__init__()
+        self.gnn = GraphAutoencoder(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, bn=bn, gnn_type='RandPNAConv', res=res, 
+                        exp_after=exp_after, embedding_size=EMBED_SIZE, **kwargs) #GINEConv
+
+    def reset_parameters(self):
+        self.gnn.reset_parameters()
+
+    def forward(self, data, additional_x):
+        return self.gnn(data, additional_x)
 
