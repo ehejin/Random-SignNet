@@ -39,5 +39,6 @@ pip install matplotlib
 
 ## Run
 ```
-python -m train.zinc model.gnn_type SignNet
+python -m train.zinc  --config configs/CONFIG_NAME.yaml
 ```
+Examples of valid configs for different types of models are named EX*.yaml in the configs folder.
