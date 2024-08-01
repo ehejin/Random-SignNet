@@ -16,13 +16,13 @@ model:
 embed_model: None
 train:
   epochs: 100
-  batch_size: 100
+  batch_size: 30
   num_samples: 90
   num_workers: 8
   lr: 0.0001
 test:
   num_samples: samples_only
-model_path: ./NODE_MODELS/gae2-decodermean.pth # Save model path
+model_path: ./NODE_MODELS/gae2-decoderzzt.pth # Save model path
 wandb: True
-regression: R
+regression: gae
 gae: True # Training a GAE

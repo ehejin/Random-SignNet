@@ -144,10 +144,10 @@ class SignNetGNN(nn.Module):
 
 
 class RandomGNN(nn.Module):
-    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn, bn, res, exp_after, EMBED_SIZE, **kwargs):
+    def __init__(self, node_feat, edge_feat, n_hid, n_out, nl_signnet, nl_gnn, bn, res, exp_after, EMBED_SIZE, regression_type, **kwargs):
         super().__init__()
         self.gnn = RGNN(node_feat, edge_feat, n_hid, n_out, nlayer=nl_gnn, bn=bn, gnn_type='RandPNAConv', res=res, 
-                        exp_after=exp_after, EMBED_SIZE=EMBED_SIZE, **kwargs) #GINEConv
+                        exp_after=exp_after, EMBED_SIZE=EMBED_SIZE, regression_type=regression_type, **kwargs) #GINEConv
 
     def reset_parameters(self):
         self.gnn.reset_parameters()

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch_geometric.nn as gnn
+from torch import Tensor
 from core.model_utils.elements import MLP
 import torch.nn.functional as F
 from torch_scatter import scatter_add
@@ -11,6 +12,68 @@ class GINConv(nn.Module):
         super().__init__()
         self.nn = MLP(nin, nout, 2, False, bias=bias, with_norm=False) ##### Do not use BN!!!!
         self.layer = gnn.GINConv(self.nn, train_eps=True)
+    def reset_parameters(self):
+        self.nn.reset_parameters()
+        self.layer.reset_parameters()
+    def forward(self, x, edge_index, edge_attr):
+        return self.layer(x, edge_index)
+    
+from torch_geometric.utils import spmm
+from torch_geometric.typing import SparseTensor
+from torch_geometric.nn.inits import reset
+
+class GINConv2(gnn.conv.MessagePassing):
+    def __init__(self, nn, eps: float = 0., train_eps: bool = False,
+                 **kwargs):
+        kwargs.setdefault('aggr', 'add')
+        super().__init__(**kwargs)
+        self.nn = nn
+        self.initial_eps = eps
+        if train_eps:
+            self.eps = torch.nn.Parameter(torch.empty(1))
+        else:
+            self.register_buffer('eps', torch.empty(1))
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        super().reset_parameters()
+        reset(self.nn)
+        self.eps.data.fill_(self.initial_eps)
+
+    def forward(
+        self,
+        x,
+        edge_index,
+        size=None,
+    ):
+        if isinstance(x, Tensor):
+            x = (x, x)
+        # propagate_type: (x: OptPairTensor)
+        import pdb; pdb.set_trace()
+        out = self.propagate(edge_index, x=x, size=size)
+
+        x_r = x[1]
+        if x_r is not None:
+            out = out + (1 + self.eps) * x_r
+
+        return self.nn(out)
+
+    def message(self, x_j: Tensor) -> Tensor:
+        return x_j
+    def message_and_aggregate(self, adj_t, x) -> Tensor:
+        import pdb; pdb.set_trace()
+        if isinstance(adj_t, SparseTensor):
+            adj_t = adj_t.set_value(None, layout=None)
+        return spmm(adj_t, x[0], reduce=self.aggr)
+
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(nn={self.nn})'
+
+class RandGINConv(nn.Module):
+    def __init__(self, nin, nout, bias=True):
+        super().__init__()
+        self.nn = MLP(nin, nout, 2, False, bias=bias, with_norm=False) ##### Do not use BN!!!!
+        self.layer = gnn.GINConv(self.nn, train_eps=True, node_dim=0)
     def reset_parameters(self):
         self.nn.reset_parameters()
         self.layer.reset_parameters()
@@ -141,8 +204,8 @@ def reconstruct_laplacian_from_flat(laplacian, num_nodes_per_graph):
     NOTE: If you use a different dataset than ZINC, have to change data_max_deg param here.
 '''
 class RandPNAConv(gnn.MessagePassing):
-    def __init__(self, nin, nout, bias=True, aggregators=['mean', 'min', 'max', 'std'], bn=False, pna_layers=2,
-                 data_max_deg=200, **kwargs): # used to be mean only? # ['mean', 'min', 'max', 'std'],
+    def __init__(self, nin, nout, bias=True, aggregators=['mean', 'min', 'max'], bn=False, pna_layers=2,
+                 data_max_deg=8001, **kwargs): # used to be mean only? # ['mean', 'min', 'max', 'std'],
         kwargs.setdefault('aggr', None)
         super().__init__(node_dim=0, **kwargs)
         self.aggregators = aggregators
@@ -286,3 +349,5 @@ class RandPNAConv_GRAPH(gnn.MessagePassing):
         out = torch.cat(outs, dim=-1)
 
         return out
+
+

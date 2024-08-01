@@ -23,8 +23,8 @@ train:
   lr: 0.0001
 test:
   num_samples: samples_only
-model_path: ./NE_6_mean_100_15_no-std.pth # path to save the model (used to get embeddings in second round of training)
-wandb: False 
+model_path: None # path to save the model (used to get embeddings in second round of training)
+wandb: False
 regression: R 
 # If we are using the Zinc dataset, we are training on graph regression. M and B are for multi-class and binary classification.
 gae: False # Whether or not we are training a GAE

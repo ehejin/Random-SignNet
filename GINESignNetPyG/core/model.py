@@ -197,8 +197,8 @@ class RGNN(nn.Module):
                 skip_connections.append(x)
         if not self.res:
             x = torch.cat(skip_connections, dim=-1)
+        x = self.inter_encoder(x)
         if self.regression_type == 'R': # scale node embeddings to be between 0 and 2
-            x = self.inter_encoder(x)
             x = x.mean(axis=-2)
             X_min = torch.min(x)
             X_max = torch.max(x)

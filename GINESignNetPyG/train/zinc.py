@@ -1,6 +1,6 @@
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]='1'
+os.environ["CUDA_VISIBLE_DEVICES"]='0'
 import torch
 from core.config import cfg, update_cfg
 from core.train import run, run_k_fold
@@ -42,11 +42,20 @@ def create_dataset(cfg):
         transform = transform_eval = None
     else:
         transform = transform_eval = EVDTransform('sym')
-    root = 'data/ZINC/'
-    train_dataset = ZINC(root, subset=True, split='train', transform=transform)
-    # train_dataset.edge_index is undirected and no self loops
-    val_dataset = ZINC(root, subset=True, split='val', transform=transform_eval) 
-    test_dataset = ZINC(root, subset=True, split='test', transform=transform_eval) 
+    if cfg.dataset == 'ZINC':
+        root = 'data/ZINC/'
+        train_dataset = ZINC(root, subset=True, split='train', transform=transform)
+        # train_dataset.edge_index is undirected and no self loops
+        val_dataset = ZINC(root, subset=True, split='val', transform=transform_eval) 
+        test_dataset = ZINC(root, subset=True, split='test', transform=transform_eval) 
+    else:
+        root = cfg.dataset
+        dataset = TUDataset(root, name=root[5:-1], transform=transform)
+        dataset = dataset.shuffle()
+        length = len(dataset)
+        train_dataset = dataset[:int(0.7*length)]
+        val_dataset = dataset[int(0.7*length):int(0.7*length)+int(0.1*length)]
+        test_dataset = dataset[int(0.7*length)+int(0.1*length):]
     return train_dataset, val_dataset, test_dataset
 
 def create_dataset_kfold(cfg): 
@@ -88,7 +97,8 @@ def create_model(cfg):
                             exp_after=cfg.embed_model.exp_after, 
                             pooling=cfg.embed_model.pool,
                             laplacian=cfg.embed_model.laplacian,
-                            EMBED_SIZE=cfg.embed_model.EMBED_SIZE) # match used during training
+                            EMBED_SIZE=cfg.embed_model.EMBED_SIZE,
+                            regression_type=cfg.regression) # match used during training
             model_emb.load_state_dict(torch.load(cfg.embed_model.path))
             model_emb.to(torch.device('cpu'))
             model_emb.eval()
@@ -123,7 +133,8 @@ def create_model(cfg):
                            exp_after=cfg.model.exp_after, 
                            pooling=cfg.model.pool,
                            laplacian=cfg.model.laplacian,
-                           EMBED_SIZE=cfg.model.EMBED_SIZE)
+                           EMBED_SIZE=cfg.model.EMBED_SIZE,
+                           regression_type=cfg.regression)
     elif cfg.model.gnn_type == 'attr':
         model = SingleGNN(None, None,
                            n_hid=cfg.model.hidden_size, 
@@ -208,7 +219,7 @@ def train(train_loader, model, model_emb, optimizer, device, num_samples, get_no
         optimizer.zero_grad()
         if num_samples is not None:
             add_x = torch.randn(data.num_nodes, num_samples, 1).to(torch.int64).to(device)
-            if regression == 'R': 
+            if regression == 'R' and not train_gae: 
                 loss = (model(data, add_x).squeeze() - y).abs().mean()
             elif train_gae:
                 out = model(data, add_x)
@@ -216,7 +227,7 @@ def train(train_loader, model, model_emb, optimizer, device, num_samples, get_no
                 loss = criterion(out.float(), adj_matrix.to(device).float()) 
             else:
                 out = model(data, add_x)
-                loss = criterion(out.float(), y.float())                    
+                loss = criterion(out.float(), y.long())                    
         else:
             loss = (model(data).squeeze() - y).abs().mean()
         with torch.autograd.set_detect_anomaly(True):
@@ -281,7 +292,7 @@ def test(loader, model, model_emb, evaluator, device, num_samples, get_node_emb=
             else:
                 total_error += (model(data).squeeze() - y).abs().sum().item()
             N += num_graphs
-        if regression or regression == "R":
+        if regression == "R":
             test_perf = - total_error / N
         else: 
             test_perf = correct / total
