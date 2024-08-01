@@ -1,0 +1,29 @@
+dataset: data/REDDIT-BINARY-5K/
+model:
+  gnn_type: samples_only  #whether or not we are only training on random input
+  num_layers: 6 # Number of gconv layers
+  nlayer_inner: 1
+  pool: add
+  bn: False # Batchnorm not used right now anyways
+  res: False # If true, uses residual connections. If false, uses skip connections
+  exp_after: False
+  laplacian: False
+  hidden_size: 100
+  transform: None
+  EMBED_SIZE: 15 # This controls the node embedding size that is eventually used in the 2nd round of training.
+  nout: 5
+embed_model: None
+train:
+  epochs: 170
+  batch_size: 10
+  num_samples: 10
+  # Number of random samples. If only training on attributes or if this is the 2nd round of training, set to None
+  num_workers: 8
+  lr: 0.0001
+test:
+  num_samples: samples_only
+model_path: './GNN_REDDIT_BINARY.pth' # path to save the model (used to get embeddings in second round of training)
+wandb: True
+regression: M 
+# If we are using the Zinc dataset, we are training on graph regression. M and B are for multi-class and binary classification.
+gae: False 
