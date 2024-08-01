@@ -149,6 +149,7 @@ class RGNN(nn.Module):
         self.exp_after = exp_after
         self.laplacian = laplacian
         self.regression_type = regression_type
+        self.nhid = nhid
         print('regression type:', self.regression_type)
         if laplacian:
             self.combine_mlp = MLP(2*nhid, nhid, nlayer=2, with_final_activation=False, with_norm=True)
@@ -184,9 +185,10 @@ class RGNN(nn.Module):
 
         previous_x = x
         skip_connections = []
+        N, M, D = x.shape
         for edge_encoder, layer, norm in zip(self.edge_encoders, self.convs, self.norms):
-            x = layer(x, data.edge_index, None, None) # output has shape NxMxnhid
-            x = norm(x)
+            x = layer(x, data.edge_index, None)#, None) # output has shape NxMxnhid
+            #x = norm(x)
             x = F.relu(x, inplace=False)
             if self.res:
                     x = x + previous_x 
@@ -284,14 +286,18 @@ class GraphAutoencoder(nn.Module):
         if not self.res:
             x = torch.cat(skip_connections, dim=-1)
         x = self.output_encoder(x)
-        x = x.mean(dim=-2)
+        #x = x.mean(dim=-2)
         
         return x
 
     def decode(self, z):
         z = self.decoder(z)
-        z = z.mean(dim=-2)
-        adj_pred = torch.sigmoid(torch.mm(z, z.t()))
+        N, M, D = z.shape
+        z = z.view(N*M, D)
+        z = torch.mm(z, z.t())
+        z = z.view(N, M, N, M)
+        z = z.mean(axis=(1,3))
+        adj_pred = torch.sigmoid(z)
         return adj_pred
 
     def forward(self, data, additional_x, get_embeddings=False):
