@@ -1,6 +1,6 @@
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]='0'
+os.environ["CUDA_VISIBLE_DEVICES"]='2'
 import torch
 from core.config import cfg, update_cfg
 from core.train import run, run_k_fold
@@ -227,7 +227,7 @@ def train(train_loader, model, model_emb, optimizer, device, num_samples, get_no
                 loss = criterion(out.float(), adj_matrix.to(device).float()) 
             else:
                 out = model(data, add_x)
-                loss = criterion(out.float(), y.long())                    
+                loss = criterion(out.float(), y.float())                    
         else:
             loss = (model(data).squeeze() - y).abs().mean()
         with torch.autograd.set_detect_anomaly(True):
@@ -247,7 +247,7 @@ def test(loader, model, model_emb, evaluator, device, num_samples, get_node_emb=
             for data in loader:
                 data = data.to(device)
                 add_x = torch.randn(data.num_nodes, num_samples, 1).to(torch.int64).to(device)
-                output = model(data, add_x)
+                output = torch.sigmoid(model(data, add_x))
                 pred_adj = output
                 true_adj = pyg_utils.to_dense_adj(data.edge_index, max_num_nodes=data.num_nodes)[0].flatten()
                 pred_adj = pred_adj.flatten()
@@ -285,7 +285,7 @@ def test(loader, model, model_emb, evaluator, device, num_samples, get_node_emb=
                     correct += (predicted == data.y).sum().item() 
                     total += y.size(0)
                 else:
-                    outputs = model(data, add_x)
+                    outputs = torch.sigmoid(model(data, add_x))
                     predicted = (outputs > 0.5).squeeze()  
                     correct += (predicted == data.y).sum().item()
                     total += data.y.size(0)

@@ -216,7 +216,7 @@ class RGNN(nn.Module):
                 x = x + self.dos_encoder(data.dos)
             x = self.output_encoder(x)
             if self.regression_type == 'B':
-                x = torch.sigmoid(x).squeeze()
+                x = x.squeeze()#torch.sigmoid(x).squeeze()
             if self.regression_type == 'M':
                 x = F.log_softmax(x, dim=-1)
         return x
@@ -297,8 +297,8 @@ class GraphAutoencoder(nn.Module):
         z = torch.mm(z, z.t())
         z = z.view(N, M, N, M)
         z = z.mean(axis=(1,3))
-        adj_pred = torch.sigmoid(z)
-        return adj_pred
+        #adj_pred = torch.sigmoid(z)
+        return z #adj_pred
 
     def forward(self, data, additional_x, get_embeddings=False):
         x = additional_x
