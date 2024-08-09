@@ -105,6 +105,71 @@ class Linear2(Linear):
 
         return out
 
+import torch
+import torch.nn as nn
+
+class CustomBatchNorm3D(nn.Module):
+    def __init__(self, D, M, epsilon=1e-5):
+        super(CustomBatchNorm3D, self).__init__()
+        self.D = D
+        self.M = M
+        self.epsilon = epsilon
+        
+        # Create M independent gamma and beta parameters for each sample
+        self.gamma = nn.Parameter(torch.ones(M, D))
+        self.beta = nn.Parameter(torch.zeros(M, D))
+
+    def reset_parameters(self):
+        nn.init.ones_(self.gamma)
+        nn.init.zeros_(self.beta)
+
+    # Input is NxMxD
+    def forward(self, T):
+        N, M, D = T.shape
+        output = torch.zeros_like(T)
+        
+        for k in range(M):
+            mean_k = T[:, k, :].mean(dim=0)  
+            std_k = T[:, k, :].std(dim=0, correction=0)  
+            T_norm = (T[:, k, :] - mean_k) / (std_k + self.epsilon)
+            output[:, k, :] = self.gamma[k] * T_norm + self.beta[k]
+        
+        return output
+        ''' If T is NxDxM:
+        N, D, M = T.shape
+        output = torch.zeros_like(T)
+        for k in range(M):
+            mean_k = T[:, :, k].mean(dim=0)
+            std_k = T[:, :, k].std(dim=0, correction=0) 
+            T_norm = (T[:, :, k] - mean_k) / (std_k + self.epsilon)
+            output[:, :, k] = self.gamma[k] * T_norm + self.beta[k]
+        return output'''
+
+class CustomBatchNorm3D_Vectorized(nn.Module):
+    def __init__(self, D, M, epsilon=1e-5):
+        super(CustomBatchNorm3D_Vectorized, self).__init__()
+        self.D = D
+        self.M = M
+        self.epsilon = epsilon
+        
+        # Create M independent gamma and beta parameters for each sample
+        self.gamma = nn.Parameter(torch.ones(M, D))
+        self.beta = nn.Parameter(torch.zeros(M, D))
+
+    def reset_parameters(self):
+        nn.init.ones_(self.gamma)
+        nn.init.zeros_(self.beta)
+
+    # Input is NxMxD
+    def forward(self, T):
+        N, M, D = T.shape
+        mean_k = T.mean(dim=0) 
+        std_k = T.std(dim=0, correction=0) 
+        T_norm = (T - mean_k) / (std_k + self.epsilon) 
+        output = self.gamma.unsqueeze(0) * T_norm + self.beta.unsqueeze(0)  
+        return output
+
+
 '''
     This model is meant to only take in random samples and can be used to get node embeddings for a second round of training. 
     The forward method forward(data, additional_x) thus only uses the random samples additional_x, and the edge indices from data. 
@@ -120,8 +185,7 @@ class RGNN(nn.Module):
         #self.convs = nn.ModuleList([getattr(gnn_wrapper, gnn_type)(nhid, nhid, bias=not bn) for _ in range(nlayer)]) # set bias=False for BN
         print('batchnorm', bn)
         print('hidden', nlayer)
-        self.norms = nn.ModuleList([nn.BatchNorm1d(nhid) if bn=='BN' else 
-                                    nn.LayerNorm(nhid) if bn=='LN' else
+        self.norms = nn.ModuleList([CustomBatchNorm3D_Vectorized(nhid, 80) if bn=='BN' else 
                                     Identity() for _ in range(nlayer)])
         if res == True:
             self.output_encoder = MLP(nhid, nout, nlayer=1, with_final_activation=False, with_norm=False if pooling=='mean' else True)
@@ -130,8 +194,8 @@ class RGNN(nn.Module):
             print('skip connections!')
             #### EDIT FOR NODE EMBEDDINGS ###
             #if regression_type == 'R':
-            self.inter_encoder = MLP(nlayer*nhid, EMBED_SIZE, nlayer=3, with_final_activation=False, nhid=nhid, with_norm=False)
-            self.output_encoder = MLP(EMBED_SIZE, nout, nlayer=1, with_final_activation=False, with_norm=False if pooling=='mean' else True)
+            #self.inter_encoder = MLP(nlayer*nhid, EMBED_SIZE, nlayer=3, with_final_activation=False, nhid=nhid, with_norm=False)
+            self.output_encoder = MLP(nlayer*nhid, nout, nlayer=2, with_final_activation=False, with_norm=False)
         self.size_embedder = nn.Embedding(200, nhid) 
         # Changed input dim from 2*nhid to nhid+1
         self.linear = Linear2(nhid+1, nhid)
@@ -159,8 +223,8 @@ class RGNN(nn.Module):
         self.output_encoder.reset_parameters()
         self.size_embedder.reset_parameters()
         self.linear.reset_parameters()
-        if not self.res:
-            self.inter_encoder.reset_parameters()
+        #if not self.res:
+        #    self.inter_encoder.reset_parameters()
         if self.laplacian:
             self.combine_mlp.reset_parameters()
         if self.dos_bins > 0:
@@ -173,7 +237,58 @@ class RGNN(nn.Module):
     
     # Set get_embeddings to False during train time and set to true during the second round of 
     # training to get embeddings
+
     def forward(self, data, additional_x=None, get_embeddings=False):
+        #additiona_x has shape Nxnhid
+        # Nx1 --> N,
+        # input encoder N --> Nxnhid (128)
+        x = additional_x
+
+        # for PDOS 
+        if self.dos_bins > 0:
+            x = torch.cat([x, data.pdos], dim=-1)
+
+        previous_x = x
+        skip_connections = []
+        N, M, D = x.shape
+        for edge_encoder, layer, norm in zip(self.edge_encoders, self.convs, self.norms):
+            x = layer(x, data.edge_index, None)#, None) # output has shape NxMxnhid
+            x = norm(x)
+            x = F.relu(x, inplace=False)
+            if self.res:
+                    x = x + previous_x 
+                    previous_x = x
+            else:
+                skip_connections.append(x)
+        if not self.res:
+            x = torch.cat(skip_connections, dim=-1)
+        #if self.embed_size is not None:
+        #    x = self.inter_encoder(x)
+        if self.regression_type == 'R': # scale node embeddings to be between 0 and 2
+            x = x.mean(axis=-2)
+            X_min = torch.min(x)
+            X_max = torch.max(x)
+            X_normalized = (x - X_min) / (X_max - X_min) 
+            x = 2 * X_normalized
+        else:
+            x = x
+            #x = x.mean(axis=-2)
+        if not get_embeddings:
+            '''if self.pooling == 'mean':
+                #graph_size = scatter(torch.ones_like(x[:,0], dtype=torch.int64), data.batch, dim=0, reduce='add')
+                x = scatter(x, data.batch, dim=0, reduce='mean') #+ self.size_embedder(graph_size)
+            else:
+                x = scatter(x, data.batch, dim=0, reduce='add')'''
+            if self.dos_bins > 0:
+                x = x + self.dos_encoder(data.dos)
+            x = self.output_encoder(x)
+            '''if self.regression_type == 'B':
+                x = x.squeeze()#torch.sigmoid(x).squeeze()
+            if self.regression_type == 'M':
+                x = F.log_softmax(x, dim=-1)'''
+        return x
+
+    '''def forward(self, data, additional_x=None, get_embeddings=False):
         #additiona_x has shape Nxnhid
         # Nx1 --> N,
         # input encoder N --> Nxnhid (128)
@@ -216,10 +331,10 @@ class RGNN(nn.Module):
                 x = x + self.dos_encoder(data.dos)
             x = self.output_encoder(x)
             if self.regression_type == 'B':
-                x = torch.sigmoid(x).squeeze()
+                x = x.squeeze()#torch.sigmoid(x).squeeze()
             if self.regression_type == 'M':
                 x = F.log_softmax(x, dim=-1)
-        return x
+        return x'''
     
     
 '''
@@ -427,7 +542,7 @@ class Single1GNN(nn.Module):
     # this version use nin as hidden instead of nout, resulting a larger model
     def __init__(self, nfeat_node, nfeat_edge, nhid, nout, nlayer, gnn_type, dropout=0, pooling='mean', bn='BN', dos_bins=0, res=True, exp_after=True, laplacian=False):
         super().__init__()
-        self.input_encoder = DiscreteEncoder(nhid-dos_bins) if nfeat_node is None else MLP(nfeat_node, nhid-dos_bins, 1)
+        self.input_encoder = nn.Linear(1433, nhid) #DiscreteEncoder(nhid-dos_bins) if nfeat_node is None else MLP(nfeat_node, nhid-dos_bins, 1)
         self.edge_encoders = nn.ModuleList([DiscreteEncoder(nhid) if nfeat_edge is None else MLP(nfeat_edge, nhid, 1) for _ in range(nlayer)])
         self.convs = nn.ModuleList([getattr(gnn_wrapper, gnn_type)(nhid, nhid, bias=not bn) for _ in range(nlayer)]) # set bias=False for BN
         print('batchnorm', bn)
@@ -457,6 +572,7 @@ class Single1GNN(nn.Module):
         self.laplacian = laplacian
         if laplacian:
             self.combine_mlp = MLP(2*nhid, nhid, nlayer=2, with_final_activation=False, with_norm=True)
+        self.laplacian = False
 
     def reset_parameters(self):
         self.input_encoder.reset_parameters()
@@ -511,15 +627,14 @@ class Single1GNN(nn.Module):
             else:
                 skip_connections.append(x)
             p += 1
-        if not self.res:
-            x = torch.cat(skip_connections, dim=1)
-        if self.pooling == 'mean':
-            graph_size = scatter(torch.ones_like(x[:,0], dtype=torch.int64), data.batch, dim=0, reduce='add')
-            x = scatter(x, data.batch, dim=0, reduce='mean') + self.size_embedder(graph_size)
+        x = torch.cat(skip_connections, dim=-1)
+        '''if self.pooling == 'mean':
+            #graph_size = scatter(torch.ones_like(x[:,0], dtype=torch.int64), data.batch, dim=0, reduce='add')
+            x = scatter(x, data.batch, dim=0, reduce='mean') #+ self.size_embedder(graph_size)
         else:
             x = scatter(x, data.batch, dim=0, reduce='add')
         if self.dos_bins > 0:
-            x = x + self.dos_encoder(data.dos)
+            x = x + self.dos_encoder(data.dos)'''
         # x has shape 128x128x100
         x = self.output_encoder(x)
         return x
