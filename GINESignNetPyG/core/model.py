@@ -105,6 +105,53 @@ class Linear2(Linear):
 
         return out
 
+class CustomBatchNorm3D(nn.Module):
+    def __init__(self, D, M, epsilon=1e-5):
+        super(CustomBatchNorm3D, self).__init__()
+        self.D = D
+        self.M = M
+        self.epsilon = epsilon
+
+        self.gamma = nn.Parameter(torch.ones(M, D))
+        self.beta = nn.Parameter(torch.zeros(M, D))
+
+    # Input is NxDxM
+    def forward(self, T):
+        N, D, M = T.shape
+        output = torch.zeros_like(T)
+
+        for k in range(M):
+            mean_k = T[:, :, k].mean(dim=0)
+            std_k = T[:, :, k].std(dim=0, corrected=0)
+            T_norm = (T[:, :, k] - mean_k) / (std_k + self.epsilon)
+            output[:, :, k] = self.gamma[k] * T_norm + self.beta[k]
+
+        return output
+
+class CustomBatchNorm3D_Vectorized(nn.Module):
+    def __init__(self, D, M, epsilon=1e-5):
+        super(CustomBatchNorm3D, self).__init__()
+        self.D = D
+        self.M = M
+        self.epsilon = epsilon
+
+        # Create M independent gamma and beta parameters for each sample
+        self.gamma = nn.Parameter(torch.ones(M, D))
+        self.beta = nn.Parameter(torch.zeros(M, D))
+
+    # Input is NxMxD
+    def forward(self, T):
+        N, M, D = T.shape
+        T = T.reshape(M, N, D) # each d needs to alternate
+        means = T.mean(axis=1) #MxD means for each batch
+        stds = T.std(axis=1, correction=0) ## CHECK CORRECTED/UNBIASED?
+        means = means.unsqueeze(axis=1)
+        std = std.unsqueeze(axis=1)
+        T = (T - means) / torch.sqrt(stds**2 + self.epsilon) * self.gamma.unsqueeze(axis=1) + self.beta.unsqueeze(axis=1)
+        T = T.reshape(N, M, D)
+        return T
+
+
 '''
     This model is meant to only take in random samples and can be used to get node embeddings for a second round of training. 
     The forward method forward(data, additional_x) thus only uses the random samples additional_x, and the edge indices from data. 
