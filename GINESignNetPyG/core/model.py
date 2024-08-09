@@ -412,8 +412,8 @@ class GraphAutoencoder(nn.Module):
         z = torch.mm(z, z.t())
         z = z.view(N, M, N, M)
         z = z.mean(axis=(1,3))
-        adj_pred = torch.sigmoid(z)
-        return adj_pred
+        #adj_pred = torch.sigmoid(z)
+        return z #adj_pred
 
     def forward(self, data, additional_x, get_embeddings=False):
         x = additional_x

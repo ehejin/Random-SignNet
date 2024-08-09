@@ -210,13 +210,14 @@ class RandPNAConv(gnn.MessagePassing):
         super().__init__(node_dim=0, **kwargs)
         self.aggregators = aggregators
         self.pre_nn = MLP(2*nin, nin, pna_layers, False, with_norm=False) # with_norm=bn
-        self.post_nn = MLP((len(aggregators) + 2) * nin, nout, pna_layers, False, with_norm=bn, bias=bias)
-        self.deg_embedder = nn.Embedding(data_max_deg, nin) 
+        self.post_nn = MLP((len(aggregators) + 1) * nin, nout, pna_layers, False, with_norm=bn, bias=bias)
+        #self.degree_buckets = nn.Linear(data_max_deg, 200)
+        #self.deg_embedder = nn.Embedding(200, nin) 
 
     def reset_parameters(self):
         self.pre_nn.reset_parameters()
         self.post_nn.reset_parameters()
-        self.deg_embedder.reset_parameters()
+        #self.deg_embedder.reset_parameters()
 
     # Completely Random samples only - edge_attr and laplacian are None
     # x has shape NxMxD, edge_index is 2xnum_edges. Thus num_node_dim=1 here
@@ -272,7 +273,7 @@ class RandPNAConv(gnn.MessagePassing):
             else:
                 raise ValueError(f'Unknown aggregator "{aggregator}".')  
             outs.append(out)
-        outs.append(self.deg_embedder(degree(index, dim_size, dtype=index.dtype)).unsqueeze(1).expand(-1, inputs.shape[-2], -1)) # degree has shape N,
+        #outs.append(self.deg_embedder(degree(index, dim_size, dtype=index.dtype)).unsqueeze(1).expand(-1, inputs.shape[-2], -1)) # degree has shape N,
         # deg embedder --> Nx128 (NxD)
         # expanded to have Nx128xM
         out = torch.cat(outs, dim=-1)

@@ -1,5 +1,5 @@
 ##### Example config for training a GAE ####
-dataset: ZINC
+dataset: data/REDDIT-MULTI-5K/
 model:
   gnn_type: gae
   num_layers: 6
@@ -16,13 +16,13 @@ model:
 embed_model: None
 train:
   epochs: 100
-  batch_size: 30
-  num_samples: 90
+  batch_size: 10
+  num_samples: 1
   num_workers: 8
-  lr: 0.0001
+  lr: 0.006
 test:
   num_samples: samples_only
 model_path: ./NODE_MODELS/gae2-decoderzzt.pth # Save model path
-wandb: True
+wandb: False
 regression: gae
 gae: True # Training a GAE
